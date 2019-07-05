@@ -1,0 +1,15 @@
+db
+incremental_db
+simulation
+greybox_tmp
+*.v.bak
+*.qws
+*.rpt
+software/Listings
+software/Objects
+software/*.hex
+software/*.txt
+software/*.uvguix.14551
+software/*.Administrator
+software/*.uvoptx
+*.bak
