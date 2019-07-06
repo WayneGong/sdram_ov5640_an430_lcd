@@ -155,4 +155,6 @@ set_global_assignment -name VERILOG_FILE src/RGB_Gary_Binary.v
 set_global_assignment -name QIP_FILE src/fifo_ip/fifo_y.qip
 set_global_assignment -name VERILOG_FILE src/test_char_send.v
 set_location_assignment PIN_R6 -to tx
+set_global_assignment -name VERILOG_FILE top.v
+set_global_assignment -name VERILOG_FILE src/Digital_feature_scan.v
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

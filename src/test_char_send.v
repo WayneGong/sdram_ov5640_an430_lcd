@@ -2,8 +2,8 @@ module  test_char_send
 (
 	input			clk,
 	input			rst_n,
-	input	[15:0]	send_str,
-	input	[3:0]	reco_digital,	
+	input	[23:0]	send_str,
+		
 	output			RsTx
 );
 
@@ -15,12 +15,15 @@ always@(posedge clk,negedge	rst_n)
 begin
 	if(!rst_n)
 		time_cnt	<=	'b0;
-	else if( time_cnt ==	150_000_000 )
+	else if( time_cnt ==	50_000_000 )		//time is 3s 
 		time_cnt	<=	'b0;
 	else
 		time_cnt	<=	time_cnt	+	1'b1;
 end
 
+wire	[7:0]	char2	=	send_str[23:16];		//15-8
+wire	[7:0]	char1	=	send_str[15:8];		//15-8
+wire	[7:0]	char0	=	send_str[7:0];		//7-0
 
 //	send_str	=	{x1_l,x1_r,x2_l,x2_r,y,x1,x2};
 //	send_str	total is 16bit
@@ -37,18 +40,13 @@ always@(*)
 begin
 	if( time_cnt <=	10)
 		begin case( time_cnt )
-			0		:	tx_data_in	=	8'h22;
-			1		:	tx_data_in	=	{7'b0,send_str[15]	}	;	
-			2		:	tx_data_in	=	{7'b0,send_str[14]	}	;
-			3		:	tx_data_in	=	{7'b0,send_str[13]	}	;
-			4		:	tx_data_in	=	{7'b0,send_str[12]	}	;
-			5		:	tx_data_in	=	{4'b0,send_str[11:8]}	;	
-			6		:	tx_data_in	=	{4'b0,send_str[7:4]	}	;
-			7		:	tx_data_in	=	{4'b0,send_str[3:0]	}	;	
-			8		:	tx_data_in	=	8'hff;
-			9		:	tx_data_in	=	{4'b0,reco_digital	}	;	
-			10		:	tx_data_in	=	8'h55;
-			default	:	tx_data_in	=	8'h00;
+			0		:	tx_data_in	=	8'h22	;
+			1		:	tx_data_in	=	char2	;	
+			2		:	tx_data_in	=	char1	;
+			3		:	tx_data_in	=	char0	;
+			4		:	tx_data_in	=	8'h55	;
+
+			default	:	tx_data_in	=	8'h55	;
 		endcase end
 	else 
 		tx_data_in	=	8'h00;		
@@ -56,7 +54,7 @@ end
 
 always@(*)
 begin
-	if( time_cnt <=	10 )
+	if( time_cnt <=	4 )
 		tx_en	=	1'b1;
 	else
 		tx_en	=	1'b0;

@@ -131,14 +131,9 @@ wire							hs_rise;
 wire							th_fall;
 wire							th_rise;
 
-wire		[11:0] 				h_2;
-wire		[11:0] 				v_5;
-wire		[11:0] 				v_3;
-
-wire		[15:0]				send_str;
-wire		[3:0]				reco_digital;
-
 wire		[2:0] 				frame_cnt;
+
+wire		[23:0]				feature_count1;
 
 assign	lcd_hs	=	disp_hs;
 assign	lcd_vs	=	disp_vs;
@@ -259,6 +254,7 @@ RGB_Gary_Binary RGB_Gary_Binary_m0
 	.i_x					(	gen_x				),
 	.i_y					(	gen_y				),	
 	.i_data					(	xy_data				),
+	.th_flag				(	th_flag				),
 	
 	.o_hs					(	GB_hs				),
     .o_vs					(	GB_vs				),
@@ -270,7 +266,22 @@ RGB_Gary_Binary RGB_Gary_Binary_m0
 );
 
 
+Digital_feature_scan Digital_feature_scan_m0
+(
+	.rst_n					(	rst_n				),   
+	.clk					(	video_clk			),
+	.i_hs					(	GB_hs				),    
+	.i_vs					(	GB_vs				),    
+	.i_de					(	GB_de				), 
+										
+	.i_x					(	GB_x				),			// video position X
+	.i_y					(	GB_y				),			// video position y	
 
+	.i_th					(	th_flag				),
+
+	.feature_count1			(	feature_count1		)
+
+);
 
 
 
@@ -346,8 +357,8 @@ test_char_send test_char_send_m0
 (
 	.clk				(	clk					),
 	.rst_n				(	rst_n				),
-	.send_str			(	send_str			),
-	.reco_digital		(	reco_digital		),
+	.send_str			(	feature_count1		),
+
 	
 	.RsTx				(	tx					)
 );

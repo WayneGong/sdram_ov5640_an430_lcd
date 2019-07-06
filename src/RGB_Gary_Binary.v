@@ -26,6 +26,7 @@ reg		[23:0]				image_data;
 reg 	[23:0]				vout_data;
 wire	[16:0]				Gary_data;
 wire						Binary_data;
+
 wire	[11:0] 	x_cnt	=	i_x;
 wire	[11:0]	y_cnt	=	i_y;
 
@@ -75,8 +76,9 @@ end
 
 always@(*)
 begin
-	if( (frame_count==2) && (x_cnt <= 70 || x_cnt >= 130 || y_cnt	<= 80 || y_cnt >= 190 ) )
-		vout_data	=	24'h777777;
+	if( (frame_count==2) && (x_cnt <= 70 || x_cnt >= 430 || y_cnt	<= 80 || y_cnt >= 190 ) )
+		vout_data	=	24'haaaaaa;
+		
 	else
 		vout_data	=	image_data;
 end
