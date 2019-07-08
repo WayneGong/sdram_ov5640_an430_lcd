@@ -11,7 +11,12 @@ module Char_Pic_Disply
 	input		[23:0]		i_data,
 	input		[3:0]		reco_digital,
 	input		[2:0]		key, 
-
+	
+	input		[11:0]		edge_left,
+	input		[11:0]		edge_up,
+	input		[11:0]		edge_dowm	,
+	input		[11:0]		edge_right	,
+	
 	input		[11:0] 		h_2,
 	input		[11:0] 		v_5,
 	input		[11:0] 		v_3,
@@ -28,10 +33,13 @@ parameter	LSB			=	2;
 
 parameter	car_digital	=	20'h01234;
 
-parameter	post_up		=	80;
-parameter	post_dowm	=	190;
-parameter	post_left	=	70;
+parameter	post_up		=	70;
+parameter	post_dowm	=	200;
+parameter	post_left	=	50;
 parameter	post_right	=	430;
+
+parameter	y_scanf		=	130;
+parameter	x_scanf		=	170;
 
 reg 			de_d0;
 reg 			de_d1;
@@ -70,14 +78,15 @@ wire	char_Division	=	( 	( x_cnt	==	post_left + 70 )	|| 					//字符分割线
 								( x_cnt	==	post_left + 70*2+5 )	|| 
 								( x_cnt	==	post_left + 70*3+10 )	|| 
 								( x_cnt	==	post_left + 70*4+10 )	 );
-								
-wire	column_feature	=	( 	( x_cnt	==	post_left + 23 )	|| 					//列特征线	
-								( x_cnt	==	post_left + 23*2 )	|| 
-								( x_cnt	==	post_left + 70*2 -35 )	|| 
-								( x_cnt	==	post_left + 70*3+10 -40 )	|| 
-								( x_cnt	==	post_left + 70*4+10 -35 )	||
-								( x_cnt	==	post_left + 70*4+10 +35 )	);
-wire	row_feature		=	( 	( y_cnt	==	80+35 )	||	( y_cnt	==	80+35*2 ) );		//行特征线	
+//列特征线								
+wire	column_feature	=	( 		( x_cnt	==	post_left + 23 )	
+								||	( x_cnt	==	post_left + 23*2 )	
+//								||	( x_cnt	==	post_left + 70*2 -35 )	
+//								||	( x_cnt	==	post_left + 70*3+10 -40 )	
+//								||	( x_cnt	==	post_left + 70*4+10 -35 )	
+//								||	( x_cnt	==	post_left + 70*4+10 +35 )	
+							);
+wire	row_feature		=	( 	( y_cnt	==	post_up+35 )	||	( y_cnt	==	post_up+35*2 ) );		//行特征线	
 								
 wire	featuer_point	=	(	(( x_cnt[11:1] == 40 ) ||( x_cnt[11:1] == 50 )			)
 								&& (( y_cnt[11:1] == 45 )||( y_cnt[11:1] == 50 )		)	
@@ -86,7 +95,12 @@ wire	featuer_point	=	(	(( x_cnt[11:1] == 40 ) ||( x_cnt[11:1] == 50 )			)
 wire	featuer_region1	=	(		(	( x_cnt >= post_left )	&&	( x_cnt <= post_left+70	)	)
 								&&	(	( y_cnt >= post_up )	&&	( y_cnt <= post_dowm 	)	)	
 							);
-							
+						
+wire	y_scanf_en		=	( ( y_cnt == y_scanf )	&&	( x_cnt > post_left )	&& ( x_cnt <=  post_right) );
+wire	x_scanf_en		=	( ( x_cnt == x_scanf )	&&	( y_cnt > post_up ) 	&& ( y_cnt <=  post_dowm ) );
+
+				
+						
 wire	disp_region1	=	( y[11:4+LSB] == 0 )&& ( x[11:3+LSB] == 0 );
 wire	disp_region2	=	( y[11:4+LSB] == 0 )&& ( x[11:3+LSB] == 1 );
 wire	disp_region3	=	( y[11:4+LSB] == 0 )&& ( x[11:3+LSB] == 2 );
@@ -114,20 +128,28 @@ begin
 	else if( edge_line )		//显示屏边框线
 		vout_data	<=	24'hff0000;			//红色	
 	
-	else if( char_region )		//字符区域
-		vout_data	<=	24'h0000ff;			//蓝色
-
-	else if(char_Division )		//字符分割线
-		vout_data	<=	24'hff00ff;			//紫色
-
+//	else if( char_region )		//字符区域
+//		vout_data	<=	24'h0000ff;			//蓝色
+		
+	else if(  y_scanf_en || x_scanf_en )		//扫描线
+		vout_data	<=	24'hff00ff;			//紫色	
 	
-//	else if( column_feature )	//行特征线				
+	else if( 		( x_cnt	==	edge_left	)  
+				|| 	( x_cnt	==	edge_right	)
+				||	( y_cnt	==	edge_up 	) 
+				||	( y_cnt ==	edge_dowm	)  
+			) 	
+		vout_data	<=	24'hff0000;			//红色	
+
+//	else if(char_Division )		//字符分割线
+//		vout_data	<=	24'hff00ff;			//紫色
+//
+//	
+//	else if( column_feature )	//列特征线				
 //		vout_data	<=	24'h00ffff;			//青绿色
 //		
-//	else if( row_feature )		//列特征线
+//	else if( row_feature )		//行特征线
 //		vout_data	<=	24'hffff00;			//黄色	
-//	else if( featuer_point )	//特征点
-//		vout_data	<=	24'hff0000;			//红色
 	
 	else if( disp_region1 )
 		vout_data	<=	{24{char_array1[127-(8*y_cnt[3+LSB:0+LSB]+x_cnt[2+LSB:0+LSB])]}};
