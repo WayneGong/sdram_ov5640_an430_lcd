@@ -131,14 +131,15 @@ wire							hs_rise;
 wire							th_fall;
 wire							th_rise;
 
-wire		[11:0] 				h_2;
-wire		[11:0] 				v_5;
-wire		[11:0] 				v_3;
-
-wire		[15:0]				send_str;
-wire		[3:0]				reco_digital;
-
 wire		[2:0] 				frame_cnt;
+
+wire		[8:0]				feature_code;
+
+wire		[11:0]				edge_left;	
+wire		[11:0]				edge_right;
+wire		[11:0]				edge_up;
+wire		[11:0]				edge_dowm;
+
 
 assign	lcd_hs	=	disp_hs;
 assign	lcd_vs	=	disp_vs;
@@ -259,6 +260,7 @@ RGB_Gary_Binary RGB_Gary_Binary_m0
 	.i_x					(	gen_x				),
 	.i_y					(	gen_y				),	
 	.i_data					(	xy_data				),
+	.th_flag				(	th_flag				),
 	
 	.o_hs					(	GB_hs				),
     .o_vs					(	GB_vs				),
@@ -270,8 +272,51 @@ RGB_Gary_Binary RGB_Gary_Binary_m0
 );
 
 
+Digital_feature_scan Digital_feature_scan_m0
+(
+	.rst_n					(	rst_n				),   
+	.clk					(	video_clk			),
+	.i_hs					(	GB_hs				),    
+	.i_vs					(	GB_vs				),    
+	.i_de					(	GB_de				), 
+										
+	.i_x					(	GB_x				),			// video position X
+	.i_y					(	GB_y				),			// video position y	
 
+	.i_th					(	th_flag				),
 
+	.feature_code			(	feature_code		)
+
+);
+
+Picture_Char_Location Picture_Char_Location_m0
+(
+
+	.rst_n					(	rst_n				),   
+	.clk					(	video_clk			),
+	.i_hs					(	GB_hs				),    
+	.i_vs					(	GB_vs				),    
+	.i_de					(	GB_de				), 
+
+	.i_x					(	GB_x				),        // video position X
+	.i_y					(	GB_y				),         // video position y	
+	.i_data					(	GB_data				),
+	.i_th					(	th_flag				),
+
+	.o_data					(						),
+	.o_x					(						),        // video position X
+	.o_y					(						),         // video position y	
+	
+	.edge_left				(	edge_left			),	
+	.edge_up				(	edge_up				),
+	.edge_dowm				(	edge_dowm			),
+	.edge_right				(	edge_right			),
+	
+	.o_hs					(					),    
+	.o_vs					(					),    
+	.o_de					(					)
+
+);
 
 
 
@@ -329,11 +374,17 @@ Char_Pic_Disply Char_Pic_Disply_m0
 	.i_vs				(	GB_vs				),    
 	.i_de				(	GB_de				),    
 	.i_data				(	GB_data				),
+	
 //	.reco_digital		(	reco_digital		),
 	
 //	.h_2				(	h_2					),
 //	.v_5				(	v_5					),
 //	.v_3				(	v_3					),		
+	
+	.edge_left			(	edge_left			),	
+	.edge_up			(	edge_up				),
+	.edge_dowm			(	edge_dowm			),
+	.edge_right			(	edge_right			),
 	
 	.o_hs				(	disp_hs				),    
 	.o_vs				(	disp_vs				), 
@@ -346,8 +397,8 @@ test_char_send test_char_send_m0
 (
 	.clk				(	clk					),
 	.rst_n				(	rst_n				),
-	.send_str			(	send_str			),
-	.reco_digital		(	reco_digital		),
+	.send_str			(	feature_code		),
+
 	
 	.RsTx				(	tx					)
 );

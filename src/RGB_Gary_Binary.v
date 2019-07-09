@@ -26,6 +26,7 @@ reg		[23:0]				image_data;
 reg 	[23:0]				vout_data;
 wire	[16:0]				Gary_data;
 wire						Binary_data;
+
 wire	[11:0] 	x_cnt	=	i_x;
 wire	[11:0]	y_cnt	=	i_y;
 
@@ -45,7 +46,7 @@ assign	Binary_data	=	(Gary_data[15:8]>=threshold)?1'b1:1'b0;
 always@(posedge clk or negedge rst_n)
 begin
 	if(rst_n == 1'b0)
-		threshold	<=	8'd100;
+		threshold	<=	8'd40;
 	else if(  key[1] )
 		threshold	<=	threshold	+	8'd5;
 	else
@@ -75,8 +76,9 @@ end
 
 always@(*)
 begin
-	if( (frame_count==2) && (x_cnt <= 70 || x_cnt >= 130 || y_cnt	<= 80 || y_cnt >= 190 ) )
-		vout_data	=	24'h777777;
+	if( (frame_count==2) && (x_cnt <= 30 || x_cnt >= 450 || y_cnt	<= 50 || y_cnt >= 220 ) )
+		vout_data	=	24'haaaaaa;
+		
 	else
 		vout_data	=	image_data;
 end
