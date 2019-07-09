@@ -13,3 +13,10 @@ software/*.uvguix.14551
 software/*.Administrator
 software/*.uvoptx
 *.bak
+output_files/top.done
+output_files/top.fit.summary
+output_files/top.map.summary
+output_files/top.sta.summary
+output_files/top.map.summary
+*.summary
+*.done
