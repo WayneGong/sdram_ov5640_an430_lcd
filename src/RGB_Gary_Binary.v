@@ -76,9 +76,8 @@ end
 
 always@(*)
 begin
-	if( (frame_count==2) && (x_cnt <= 30 || x_cnt >= 450 || y_cnt	<= 50 || y_cnt >= 220 ) )
-		vout_data	=	24'haaaaaa;
-		
+	if( (frame_count==2) && (x_cnt <= 30 || x_cnt >= 450 || y_cnt	<= 30 || y_cnt >= 240 ) )
+		vout_data	=	24'haaaaaa;		
 	else
 		vout_data	=	image_data;
 end

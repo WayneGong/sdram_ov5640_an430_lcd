@@ -120,13 +120,18 @@ set_location_assignment PIN_N15 -to led[2]
 set_location_assignment PIN_P16 -to led[1]
 set_location_assignment PIN_R16 -to led[0]
 set_location_assignment PIN_R6 -to tx
+set_global_assignment -name VERILOG_FILE src/Digital_feature_scan5.v
+set_global_assignment -name VERILOG_FILE src/Digital_feature_scan4.v
+set_global_assignment -name VERILOG_FILE src/Digital_feature_scan3.v
+set_global_assignment -name VERILOG_FILE src/Digital_feature_scan2.v
+set_global_assignment -name VERILOG_FILE src/Digital_feature_scan1.v
+set_global_assignment -name VERILOG_FILE src/digital_recognition.v
 set_global_assignment -name VERILOG_FILE src/parameter_define.v
 set_global_assignment -name VERILOG_FILE src/UART_Module/uart_tx.v
 set_global_assignment -name VERILOG_FILE src/UART_Module/UART_TOP.v
 set_global_assignment -name VERILOG_FILE src/UART_Module/uart_rx.v
 set_global_assignment -name VERILOG_FILE src/UART_Module/fifo.v
 set_global_assignment -name VERILOG_FILE src/UART_Module/baudgen.v
-set_global_assignment -name VERILOG_FILE src/digital_recognition.v
 set_global_assignment -name VERILOG_FILE src/Edge_Detect.v
 set_global_assignment -name VERILOG_FILE src/char_array_decode.v
 set_global_assignment -name VERILOG_FILE src/Key_Module.v
@@ -159,4 +164,6 @@ set_global_assignment -name VERILOG_FILE src/test_char_send.v
 set_global_assignment -name VERILOG_FILE top.v
 set_global_assignment -name VERILOG_FILE src/Digital_feature_scan.v
 set_global_assignment -name VERILOG_FILE src/Picture_Char_Location.v
+set_global_assignment -name VERILOG_FILE src/Char_Division.v
+set_global_assignment -name VERILOG_FILE src/Digital_Recognition.v
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

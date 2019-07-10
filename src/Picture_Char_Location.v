@@ -30,12 +30,12 @@ module Picture_Char_Location
 parameter	post_up		=	70;
 parameter	post_dowm	=	200;
 parameter	post_left	=	50;
-parameter	post_right	=	430;
+parameter	post_right	=	430;	//扫描线的范围
 
-parameter	y_scanf		=	130;
+parameter	y_scanf		=	130;	//边框定位的扫描线
 parameter	x_scanf		=	170;
 
-wire	[11:0] 	x_cnt	=	i_x;
+wire	[11:0] 	x_cnt	=	i_x;	//图像坐标
 wire	[11:0]	y_cnt	=	i_y;
 
 wire	y_scanf_en		=	( ( y_cnt == y_scanf )	&&	( x_cnt > post_left )	&& ( x_cnt <=  post_right) );

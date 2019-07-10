@@ -9,13 +9,32 @@ module Char_Pic_Disply
 	input                   i_vs,    
 	input                   i_de,    
 	input		[23:0]		i_data,
-	input		[3:0]		reco_digital,
+
 	input		[2:0]		key, 
 	
 	input		[11:0]		edge_left,
 	input		[11:0]		edge_up,
 	input		[11:0]		edge_dowm	,
 	input		[11:0]		edge_right	,
+	
+	input		[11:0]		Partition_line1,
+	input		[11:0]		Partition_line2,
+	input		[11:0]		Partition_line3,
+	input		[11:0]		Partition_line4,
+	input		[11:0]		Partition_line5,
+	input		[11:0]		Partition_line6,
+	
+	input		[11:0]		char_up_position,	
+	input		[11:0]		char_down_position,
+
+	input		[11:0]		row_scanf_line1,
+	input		[11:0]		row_scanf_line2,
+
+	input		[3:0]		chepai_Digital_1,
+	input		[3:0]		chepai_Digital_2,
+	input		[3:0]		chepai_Digital_3,
+	input		[3:0]		chepai_Digital_4,
+	input		[3:0]		chepai_Digital_5,	
 	
 	input		[11:0] 		h_2,
 	input		[11:0] 		v_5,
@@ -30,8 +49,6 @@ module Char_Pic_Disply
 
 
 parameter	LSB			=	2;
-
-parameter	car_digital	=	20'h01234;
 
 parameter	post_up		=	70;
 parameter	post_dowm	=	200;
@@ -64,29 +81,26 @@ begin
 	hs_d0 		<= 	i_hs	;
 end
 
-wire	[3:0]	char1	=	reco_digital	;
-wire	[3:0]	char2	=	car_digital[15:12]	;
-wire	[3:0]	char3	=	car_digital[11:8]	;
-wire	[3:0]	char4	=	car_digital[7:4]	;
-wire	[3:0]	char5	=	car_digital[3:0]	;
+wire	[3:0]	char1	=	chepai_Digital_1	;
+wire	[3:0]	char2	=	chepai_Digital_2	;
+wire	[3:0]	char3	=	chepai_Digital_3	;
+wire	[3:0]	char4	=	chepai_Digital_4	;
+wire	[3:0]	char5	=	chepai_Digital_5	;
 
 
 wire	edge_line		=	( ( x_cnt	==	1  ) || ( x_cnt	==	480 ) || ( y_cnt == 0  ) || ( y_cnt == 271 ) );
-wire	char_region		=	( ( x_cnt	==	post_left ) || ( x_cnt	==	post_right ) || ( y_cnt == post_up ) || ( y_cnt == post_dowm ) );
+wire	char_region		=	( ( x_cnt	==	edge_left ) || ( x_cnt	==	edge_right ) || ( y_cnt == edge_up ) || ( y_cnt == edge_dowm ) );
 
-wire	char_Division	=	( 	( x_cnt	==	post_left + 70 )	|| 					//字符分割线	
-								( x_cnt	==	post_left + 70*2+5 )	|| 
-								( x_cnt	==	post_left + 70*3+10 )	|| 
-								( x_cnt	==	post_left + 70*4+10 )	 );
+
 //列特征线								
-wire	column_feature	=	( 		( x_cnt	==	post_left + 23 )	
-								||	( x_cnt	==	post_left + 23*2 )	
+wire	column_feature	=	( 		( x_cnt	==	Partition_line1 + 18 )	
+								||	( x_cnt	==	Partition_line1 + 18*2 )	
 //								||	( x_cnt	==	post_left + 70*2 -35 )	
 //								||	( x_cnt	==	post_left + 70*3+10 -40 )	
 //								||	( x_cnt	==	post_left + 70*4+10 -35 )	
 //								||	( x_cnt	==	post_left + 70*4+10 +35 )	
 							);
-wire	row_feature		=	( 	( y_cnt	==	post_up+35 )	||	( y_cnt	==	post_up+35*2 ) );		//行特征线	
+wire	row_feature		=	( 	( y_cnt	== char_up_position+25 ) || ( y_cnt ==	char_up_position+25*2 ) );		//行特征线	
 								
 wire	featuer_point	=	(	(( x_cnt[11:1] == 40 ) ||( x_cnt[11:1] == 50 )			)
 								&& (( y_cnt[11:1] == 45 )||( y_cnt[11:1] == 50 )		)	
@@ -99,8 +113,67 @@ wire	featuer_region1	=	(		(	( x_cnt >= post_left )	&&	( x_cnt <= post_left+70	)	
 wire	y_scanf_en		=	( ( y_cnt == y_scanf )	&&	( x_cnt > post_left )	&& ( x_cnt <=  post_right) );
 wire	x_scanf_en		=	( ( x_cnt == x_scanf )	&&	( y_cnt > post_up ) 	&& ( y_cnt <=  post_dowm ) );
 
-				
-						
+wire	char_Division	=	( 		( x_cnt == 	Partition_line1	)	
+								||	( x_cnt == 	Partition_line2	)	
+								||	( x_cnt == 	Partition_line3	)	
+								||	( x_cnt == 	Partition_line4	)
+								||	( x_cnt == 	Partition_line5	)	
+								||	( x_cnt == 	Partition_line6	)
+								||	( y_cnt	==	char_up_position)
+								||	( y_cnt	==	char_down_position)
+							);
+
+wire	feature_scanf_en	=	(		( y_cnt	==	row_scanf_line1	)
+									||	( y_cnt	==	row_scanf_line2	)
+								);	
+								
+									
+wire	[11:0]	char_left	=	Partition_line5;
+wire	[11:0]	char_right	=	Partition_line6	;
+wire	[11:0]	char_up		=	char_up_position;
+wire	[11:0]	char_down	=	char_down_position;
+
+wire	featuer_region11	=	(	(	( x_cnt >= char_left )	&&	( x_cnt <= char_left+18	)	)
+								&&	(	( y_cnt >= char_up )	&&	( y_cnt <= char_up+25 	)	)	
+							);
+
+
+wire	featuer_region12	=	(	(	( x_cnt >= char_left+18 )	&&	( x_cnt <= char_left+18*2	)	)
+								&&	(	( y_cnt >= char_up )	&&	( y_cnt <= char_up+25 	)	)	
+							);							
+	
+wire	featuer_region13	=	(	(	( x_cnt >= char_left+18*2 )	&&	( x_cnt <= char_right	)	)
+								&&	(	( y_cnt >= char_up )	&&	( y_cnt <= char_up+25 	)	)	
+							);	
+							
+wire	featuer_region21	=	(	(	( x_cnt >= char_left )	&&	( x_cnt <= char_left+18	)	)
+								&&	(	( y_cnt >= char_up+25 )	&&	( y_cnt <= char_up+25*2 	)	)	
+							);
+		
+wire	featuer_region22	=	(	(	( x_cnt >= char_left+18 )	&&	( x_cnt <= char_left+18*2	)	)
+								&&	(	( y_cnt >= char_up+25 )	&&	( y_cnt <= char_up+25*2  	)	)	
+							);
+	
+wire	featuer_region23	=	(	(	( x_cnt >= char_left +18*2)	&&	( x_cnt <= char_right	)	)
+								&&	(	( y_cnt >= char_up+25 )	&&	( y_cnt <= char_up+25*2  	)	)	
+							);
+							
+wire	featuer_region31	=	(	(	( x_cnt >= char_left )	&&	( x_cnt <= char_left+18	)	)
+								&&	(	( y_cnt >= char_up+25*2 )	&&	( y_cnt <= char_down 	)	)	
+							);
+
+
+wire	featuer_region32	=	(	(	( x_cnt >= char_left+18 )	&&	( x_cnt <= char_left+18*2	)	)
+								&&	(	( y_cnt >= char_up+25*2 )	&&	( y_cnt <= char_down 	)	)	
+							);
+
+
+wire	featuer_region33	=	(	(	( x_cnt >= char_left+18*2 )	&&	( x_cnt <= char_right	)	)
+								&&	(	( y_cnt >= char_up+25*2 )	&&	( y_cnt <= char_down 	)	)	
+							);	
+
+
+	
 wire	disp_region1	=	( y[11:4+LSB] == 0 )&& ( x[11:3+LSB] == 0 );
 wire	disp_region2	=	( y[11:4+LSB] == 0 )&& ( x[11:3+LSB] == 1 );
 wire	disp_region3	=	( y[11:4+LSB] == 0 )&& ( x[11:3+LSB] == 2 );
@@ -118,49 +191,57 @@ char_array_decode  char_array_decode_m2(	.char(	char2	),	.char_array(	char_array
 char_array_decode  char_array_decode_m3(	.char(	char3	),	.char_array(	char_array3	)	);	
 char_array_decode  char_array_decode_m4(	.char(	char4	),	.char_array(	char_array4	)	);	
 char_array_decode  char_array_decode_m5(	.char(	char5	),	.char_array(	char_array5	)	);	
-	
-
 
 always@(posedge clk or negedge rst_n)
 begin
 	if(rst_n == 1'b0)
 		vout_data	<=	24'b0;		
-	else if( edge_line )		//显示屏边框线
-		vout_data	<=	24'hff0000;			//红色	
-	
-//	else if( char_region )		//字符区域
-//		vout_data	<=	24'h0000ff;			//蓝色
 		
-	else if(  y_scanf_en || x_scanf_en )		//扫描线
-		vout_data	<=	24'hff00ff;			//紫色	
-	
-	else if( 		( x_cnt	==	edge_left	)  
-				|| 	( x_cnt	==	edge_right	)
-				||	( y_cnt	==	edge_up 	) 
-				||	( y_cnt ==	edge_dowm	)  
-			) 	
-		vout_data	<=	24'hff0000;			//红色	
-
-//	else if(char_Division )		//字符分割线
+//	else if(  y_scanf_en || x_scanf_en )		//车牌定位扫描线
 //		vout_data	<=	24'hff00ff;			//紫色
+//	
+//	else if(char_Division )		//字符分割线
+//		vout_data	<=	24'h00FF00;			//绿色
+//		
+//	else if( column_feature || row_feature )	//列,列特征线				
+//		vout_data	<=	24'hffff00;			//黄色	
+//	
+//	else if(   featuer_region11 || featuer_region13 || featuer_region22 || featuer_region31 || featuer_region33  )
+//		vout_data	<=	24'h0000ff;			//蓝色
+//	
+//
+////	else if( edge_line )		//显示屏边框线
+////		vout_data	<=	24'hff0000;			//红色
+//	
+////	else if(feature_scanf_en )		//特征扫描线
+////		vout_data	<=	24'h0000ff;			//绿色				
+//	
+////	else if( char_region )		//字符区域
+////		vout_data	<=	24'hff0000;			//蓝色
+//				
+//	
+////	else if( 		( x_cnt	==	edge_left	)  	//车牌边框
+////				|| 	( x_cnt	==	edge_right	)
+////				||	( y_cnt	==	edge_up 	) 
+////				||	( y_cnt ==	edge_dowm	)  
+////			) 	
+////		vout_data	<=	24'hff0000;			//红色	
+////	
+////		
 //
 //	
-//	else if( column_feature )	//列特征线				
-//		vout_data	<=	24'h00ffff;			//青绿色
-//		
-//	else if( row_feature )		//行特征线
-//		vout_data	<=	24'hffff00;			//黄色	
-	
-	else if( disp_region1 )
-		vout_data	<=	{24{char_array1[127-(8*y_cnt[3+LSB:0+LSB]+x_cnt[2+LSB:0+LSB])]}};
-	else if( disp_region2 )
-		vout_data	<=	{24{char_array2[127-(8*y_cnt[3+LSB:0+LSB]+x_cnt[2+LSB:0+LSB])]}};
-	else if( disp_region3 )
-		vout_data	<=	{24{char_array3[127-(8*y_cnt[3+LSB:0+LSB]+x_cnt[2+LSB:0+LSB])]}};
-	else if( disp_region4 )
-		vout_data	<=	{24{char_array4[127-(8*y_cnt[3+LSB:0+LSB]+x_cnt[2+LSB:0+LSB])]}};
-	else if( disp_region5 )
-		vout_data	<=	{24{char_array5[127-(8*y_cnt[3+LSB:0+LSB]+x_cnt[2+LSB:0+LSB])]}};
+//
+//
+//	else if( disp_region1 )
+//		vout_data	<=	{24{char_array1[127-(8*y_cnt[3+LSB:0+LSB]+x_cnt[2+LSB:0+LSB])]}};
+//	else if( disp_region2 )
+//		vout_data	<=	{24{char_array2[127-(8*y_cnt[3+LSB:0+LSB]+x_cnt[2+LSB:0+LSB])]}};
+//	else if( disp_region3 )
+//		vout_data	<=	{24{char_array3[127-(8*y_cnt[3+LSB:0+LSB]+x_cnt[2+LSB:0+LSB])]}};
+//	else if( disp_region4 )
+//		vout_data	<=	{24{char_array4[127-(8*y_cnt[3+LSB:0+LSB]+x_cnt[2+LSB:0+LSB])]}};
+//	else if( disp_region5 )
+//		vout_data	<=	{24{char_array5[127-(8*y_cnt[3+LSB:0+LSB]+x_cnt[2+LSB:0+LSB])]}};
 	else
 		vout_data	<=	i_data;
 end
