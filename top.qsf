@@ -166,4 +166,5 @@ set_global_assignment -name VERILOG_FILE src/Digital_feature_scan.v
 set_global_assignment -name VERILOG_FILE src/Picture_Char_Location.v
 set_global_assignment -name VERILOG_FILE src/Char_Division.v
 set_global_assignment -name VERILOG_FILE src/Digital_Recognition.v
+set_global_assignment -name PROJECT_IP_REGENERATION_POLICY ALWAYS_REGENERATE_IP
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

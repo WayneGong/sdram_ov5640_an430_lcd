@@ -43,15 +43,15 @@ reg	[11:0]	feature31_count_reg	,	feature31_count;
 reg	[11:0]	feature32_count_reg	,	feature32_count;
 reg	[11:0]	feature33_count_reg	,	feature33_count;
 
-assign	feature_code[0]	=	(	feature11_count	>=	60	)	?	1'b1	:	1'b0	;
-assign	feature_code[1]	=	(	feature12_count	>=	60	)	?	1'b1	:	1'b0	;
-assign	feature_code[2]	=	(	feature13_count	>=	60	)	?	1'b1	:	1'b0	;
-assign	feature_code[3]	=	(	feature21_count	>=	60	)	?	1'b1	:	1'b0	;
-assign	feature_code[4]	=	(	feature22_count	>=	60	)	?	1'b1	:	1'b0	;
-assign	feature_code[5]	=	(	feature23_count	>=	60	)	?	1'b1	:	1'b0	;
-assign	feature_code[6]	=	(	feature31_count	>=	60	)	?	1'b1	:	1'b0	;
-assign	feature_code[7]	=	(	feature32_count	>=	60	)	?	1'b1	:	1'b0	;
-assign	feature_code[8]	=	(	feature33_count	>=	60	)	?	1'b1	:	1'b0	;
+assign	feature_code[0]	=	(	feature11_count	>=	50	)	?	1'b1	:	1'b0	;
+assign	feature_code[1]	=	(	feature12_count	>=	50	)	?	1'b1	:	1'b0	;
+assign	feature_code[2]	=	(	feature13_count	>=	50	)	?	1'b1	:	1'b0	;
+assign	feature_code[3]	=	(	feature21_count	>=	50	)	?	1'b1	:	1'b0	;
+assign	feature_code[4]	=	(	feature22_count	>=	50	)	?	1'b1	:	1'b0	;
+assign	feature_code[5]	=	(	feature23_count	>=	50	)	?	1'b1	:	1'b0	;
+assign	feature_code[6]	=	(	feature31_count	>=	50	)	?	1'b1	:	1'b0	;
+assign	feature_code[7]	=	(	feature32_count	>=	50	)	?	1'b1	:	1'b0	;
+assign	feature_code[8]	=	(	feature33_count	>=	50	)	?	1'b1	:	1'b0	;
 
 wire	[4:0]	feature_sum	=	feature_code[0]	+	feature_code[1]	+	feature_code[2]	+
                                 feature_code[3]	+	feature_code[4]	+	feature_code[5]	+
@@ -60,42 +60,42 @@ wire	[4:0]	feature_sum	=	feature_code[0]	+	feature_code[1]	+	feature_code[2]	+
 wire	vaule_output	=	(	x_cnt	==	450	&&	y_cnt	==	250	);
 
 
-wire	featuer_region11	=	(	(	( x_cnt >= char_left )	&&	( x_cnt <= char_left+18	)	)
+wire	featuer_region11	=	(	(	( x_cnt >= char_left )	&&	( x_cnt <= char_left+15	)	)
 								&&	(	( y_cnt >= char_up )	&&	( y_cnt <= char_up+25 	)	)	
 							);
 
 
-wire	featuer_region12	=	(	(	( x_cnt >= char_left+18 )	&&	( x_cnt <= char_left+18*2	)	)
+wire	featuer_region12	=	(	(	( x_cnt >= char_left+15 )	&&	( x_cnt <= char_left+15*2	)	)
 								&&	(	( y_cnt >= char_up )	&&	( y_cnt <= char_up+25 	)	)	
 							);							
 	
-wire	featuer_region13	=	(	(	( x_cnt >= char_left+18*2 )	&&	( x_cnt <= char_right	)	)
+wire	featuer_region13	=	(	(	( x_cnt >= char_left+15*2 )	&&	( x_cnt <= char_right	)	)
 								&&	(	( y_cnt >= char_up )	&&	( y_cnt <= char_up+25 	)	)	
 							);	
 							
-wire	featuer_region21	=	(	(	( x_cnt >= char_left )	&&	( x_cnt <= char_left+18	)	)
+wire	featuer_region21	=	(	(	( x_cnt >= char_left )	&&	( x_cnt <= char_left+15	)	)
 								&&	(	( y_cnt >= char_up+25 )	&&	( y_cnt <= char_up+25*2 	)	)	
 							);
 		
-wire	featuer_region22	=	(	(	( x_cnt >= char_left+18 )	&&	( x_cnt <= char_left+18*2	)	)
+wire	featuer_region22	=	(	(	( x_cnt >= char_left+15 )	&&	( x_cnt <= char_left+15*2	)	)
 								&&	(	( y_cnt >= char_up+25 )	&&	( y_cnt <= char_up+25*2  	)	)	
 							);
 	
-wire	featuer_region23	=	(	(	( x_cnt >= char_left +18*2)	&&	( x_cnt <= char_right	)	)
+wire	featuer_region23	=	(	(	( x_cnt >= char_left +15*2)	&&	( x_cnt <= char_right	)	)
 								&&	(	( y_cnt >= char_up+25 )	&&	( y_cnt <= char_up+25*2  	)	)	
 							);
 							
-wire	featuer_region31	=	(	(	( x_cnt >= char_left )	&&	( x_cnt <= char_left+18	)	)
+wire	featuer_region31	=	(	(	( x_cnt >= char_left )	&&	( x_cnt <= char_left+15	)	)
 								&&	(	( y_cnt >= char_up+25*2 )	&&	( y_cnt <= char_down 	)	)	
 							);
 
 
-wire	featuer_region32	=	(	(	( x_cnt >= char_left+18 )	&&	( x_cnt <= char_left+18*2	)	)
+wire	featuer_region32	=	(	(	( x_cnt >= char_left+15 )	&&	( x_cnt <= char_left+15*2	)	)
 								&&	(	( y_cnt >= char_up+25*2 )	&&	( y_cnt <= char_down 	)	)	
 							);
 
 
-wire	featuer_region33	=	(	(	( x_cnt >= char_left+18*2 )	&&	( x_cnt <= char_right	)	)
+wire	featuer_region33	=	(	(	( x_cnt >= char_left+15*2 )	&&	( x_cnt <= char_right	)	)
 								&&	(	( y_cnt >= char_up+25*2 )	&&	( y_cnt <= char_down 	)	)	
 							);	
 	
