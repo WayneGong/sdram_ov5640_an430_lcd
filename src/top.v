@@ -189,18 +189,23 @@ assign	lcd_dclk	=	~video_clk;
 assign	sdram_clk	=	ext_mem_clk;
 assign	write_en 	=	cmos_16bit_wr;
 assign	write_data 	=	{cmos_16bit_data[4:0],cmos_16bit_data[10:5],cmos_16bit_data[15:11]};
+
 //generate the CMOS sensor clock and the SDRAM controller clock
+//PLL模块，用于生产摄像头的时钟信号和SDRMA的时钟信号
 sys_pll sys_pll_m0(
 	.inclk0                     (clk                      ),
-	.c0                         (cmos_xclk                ),
-	.c1                         (ext_mem_clk              )
+	.c0                         (cmos_xclk                ),	//24MHz
+	.c1                         (ext_mem_clk              )		//100MHz
 	);
 //generate video pixel clock
+//PLL模块，生产LCD屏幕的时钟信号
 video_pll video_pll_m0(
 	.inclk0                     (clk                      ),
-	.c0                         (video_clk                )
+	.c0                         (video_clk                )		//9MHz
 	);
+	
 //I2C master controller
+//IIC时序生成器，用于摄像头参数的配置
 i2c_config i2c_config_m0(
 	.rst                        (~rst_n                   ),
 	.clk                        (clk                      ),
@@ -216,11 +221,13 @@ i2c_config i2c_config_m0(
 	.i2c_sda                    (cmos_sda                 )
 );
 //configure look-up table
+//摄像头配置参数表
 lut_ov5640_rgb565_480_272 lut_ov5640_rgb565_480_272_m0(
 	.lut_index                  (lut_index                ),
 	.lut_data                   (lut_data                 )
 );
 //CMOS sensor 8bit data is converted to 16bit data
+//摄像头的图像数据的捕获和位宽转换，将输入的8位图像数据拼接位16位的图像数据（RGB565）
 cmos_8_16bit cmos_8_16bit_m0(
 	.rst                        (~rst_n                   ),
 	.pclk                       (cmos_pclk                ),
@@ -231,6 +238,7 @@ cmos_8_16bit cmos_8_16bit_m0(
 	.de_o                       (cmos_16bit_wr            )
 );
 //CMOS sensor writes the request and generates the read and write address index
+//CMOS传感器写入请求并生成读写地址索引
 cmos_write_req_gen cmos_write_req_gen_m0(
 	.rst                        (~rst_n                   ),
 	.pclk                       (cmos_pclk                ),
@@ -241,6 +249,7 @@ cmos_write_req_gen cmos_write_req_gen_m0(
 	.write_req_ack              (write_req_ack            )
 );
 //The video output timing generator and generate a frame read data request
+//生成LCD屏幕的驱动时序，并且生成读信号请求，用于从SDRAM中读取缓存的图像数据。
 video_timing_data video_timing_data_m0
 (
 	.video_clk                  (	video_clk			),
@@ -255,7 +264,7 @@ video_timing_data video_timing_data_m0
 	.vout_data                  (	timing_data			)
 );
 
-
+//用于生成LCD的坐标参数
 timing_gen_xy timing_gen_xy_m0
 (
 	.rst_n					(	rst_n			),   
@@ -275,6 +284,7 @@ timing_gen_xy timing_gen_xy_m0
 	.y						(	gen_y			)    	// video position y
 );
 
+//按键模块，将数据的按键信号进行消抖处理
 key_Module  key_Module_m0
 (
 	.clk					(	video_clk			),
@@ -283,7 +293,7 @@ key_Module  key_Module_m0
 	.key_out				(	key_out				)
 ); 
 
-
+//图像数据的灰度处理和二值化处理
 RGB_Gary_Binary RGB_Gary_Binary_m0
 (
 	.rst_n					(	rst_n				),   
@@ -306,7 +316,7 @@ RGB_Gary_Binary RGB_Gary_Binary_m0
 
 );
 
-
+//车牌图像的定位模块
 Picture_Char_Location Picture_Char_Location_m0
 (
 
@@ -328,6 +338,7 @@ Picture_Char_Location Picture_Char_Location_m0
 	
 );
 
+//车牌字符分割模块
 Char_Division Char_Division_m0
 ( 
 	.rst_n					(	rst_n				),   
@@ -356,6 +367,7 @@ Char_Division Char_Division_m0
 
 );
 
+//第一个字符的识别模块。采用区域扫描发和特征点识别法相结合的算法
 Digital_feature_scan Digital_feature_scan_m1
 (
 	.rst_n					(	rst_n				),   
@@ -384,6 +396,7 @@ Digital_feature_scan Digital_feature_scan_m1
 
 );
 
+//第二个字符的识别模块。采用区域扫描发和特征点识别法相结合的算法
 Digital_feature_scan Digital_feature_scan_m2
 (
 	.rst_n					(	rst_n				),   
@@ -411,6 +424,7 @@ Digital_feature_scan Digital_feature_scan_m2
 
 );
 
+//第三个字符的识别模块。采用区域扫描发和特征点识别法相结合的算法
 Digital_feature_scan Digital_feature_scan_m3
 (
 	.rst_n					(	rst_n				),   
@@ -437,7 +451,7 @@ Digital_feature_scan Digital_feature_scan_m3
 	.char_middle			(	char3_middle		)
 
 );
-
+//第四个字符的识别模块。采用区域扫描发和特征点识别法相结合的算法
 Digital_feature_scan Digital_feature_scan_m4
 (
 	.rst_n					(	rst_n				),   
@@ -464,7 +478,7 @@ Digital_feature_scan Digital_feature_scan_m4
 	.char_middle			(	char4_middle		)
 
 );
-
+//第五个字符的识别模块。采用区域扫描发和特征点识别法相结合的算法
 Digital_feature_scan5 Digital_feature_scan_m5
 (
 	.rst_n					(	rst_n				),   
@@ -515,7 +529,7 @@ Digital_feature_scan5 Digital_feature_scan_m5
 //		
 //);
 
-
+//车牌图像以及识别字符，辅助线的显示模块
 Char_Pic_Disply Char_Pic_Disply_m0
 ( 	
 	.rst_n				(	rst_n				),   
@@ -571,6 +585,7 @@ Char_Pic_Disply Char_Pic_Disply_m0
 
 );
 
+//串口发送模块，用于调试数据
 test_char_send test_char_send_m0
 (
 	.clk				(	clk					),
@@ -581,6 +596,7 @@ test_char_send test_char_send_m0
 	.RsTx				(	tx					)
 );
 
+//LED灯闪烁模块
 led_shaning led_shaning_m0
 (
 	.clk				(	clk				),
@@ -591,6 +607,7 @@ led_shaning led_shaning_m0
 );
 
 //video frame data read-write control
+//视频读写控制没夸
 frame_read_write frame_read_write_m0
 (
 	.rst                        (~rst_n                   ),
@@ -634,6 +651,7 @@ frame_read_write frame_read_write_m0
 	.write_data                 (write_data               )
 );
 //sdram controller
+//SDRAM控制模块
 sdram_core sdram_core_m0
 (
 	.rst                        (~rst_n                   ),
