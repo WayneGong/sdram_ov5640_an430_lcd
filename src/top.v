@@ -31,7 +31,8 @@ module top(
 	input                       clk,
 	input                       rst_n,
 	input	[3:1]				key,
-
+	output						led,
+	
 	inout                       cmos_scl,          //cmos i2c clock
 	inout                       cmos_sda,          //cmos i2c data
 	input                       cmos_vsync,        //cmos vsync
@@ -133,13 +134,47 @@ wire							th_rise;
 
 wire		[2:0] 				frame_cnt;
 
-wire		[8:0]				feature_code;
+wire		[8:0]				feature_code1;
+wire		[8:0]				feature_code2;
+wire		[8:0]				feature_code3;
+wire		[8:0]				feature_code4;
+wire		[8:0]				feature_code5;
 
 wire		[11:0]				edge_left;	
 wire		[11:0]				edge_right;
 wire		[11:0]				edge_up;
-wire		[11:0]				edge_dowm;
+wire		[11:0]				edge_down;
 
+wire		[11:0]				Partition_line1;
+wire		[11:0]				Partition_line2;
+wire		[11:0]				Partition_line3;
+wire		[11:0]				Partition_line4;
+wire		[11:0]				Partition_line5;
+wire		[11:0]				Partition_line6;
+
+wire		[11:0]				char_up_position;	
+wire		[11:0]				char_down_position;
+
+wire		[11:0]				row_scanf_line1;
+wire		[11:0]				row_scanf_line2;
+
+wire		[3:0]				chepai_Digital_1;
+wire		[3:0]				chepai_Digital_2;
+wire		[3:0]				chepai_Digital_3;
+wire		[3:0]				chepai_Digital_4;
+wire		[3:0]				chepai_Digital_5;
+
+wire		[11:0]				char1_middle;
+wire		[11:0]				char2_middle;
+wire		[11:0]				char3_middle;
+wire		[11:0]				char4_middle;
+wire		[11:0]				char5_middle;
+
+wire		[7:0]				intersection_code1;
+wire		[7:0]				intersection_code2;
+wire		[7:0]				intersection_code3;
+wire		[7:0]				intersection_code4;
+wire		[7:0]				intersection_code5;
 
 assign	lcd_hs	=	disp_hs;
 assign	lcd_vs	=	disp_vs;
@@ -272,23 +307,6 @@ RGB_Gary_Binary RGB_Gary_Binary_m0
 );
 
 
-Digital_feature_scan Digital_feature_scan_m0
-(
-	.rst_n					(	rst_n				),   
-	.clk					(	video_clk			),
-	.i_hs					(	GB_hs				),    
-	.i_vs					(	GB_vs				),    
-	.i_de					(	GB_de				), 
-										
-	.i_x					(	GB_x				),			// video position X
-	.i_y					(	GB_y				),			// video position y	
-
-	.i_th					(	th_flag				),
-
-	.feature_code			(	feature_code		)
-
-);
-
 Picture_Char_Location Picture_Char_Location_m0
 (
 
@@ -302,65 +320,199 @@ Picture_Char_Location Picture_Char_Location_m0
 	.i_y					(	GB_y				),         // video position y	
 	.i_data					(	GB_data				),
 	.i_th					(	th_flag				),
-
-	.o_data					(						),
-	.o_x					(						),        // video position X
-	.o_y					(						),         // video position y	
 	
 	.edge_left				(	edge_left			),	
 	.edge_up				(	edge_up				),
-	.edge_dowm				(	edge_dowm			),
-	.edge_right				(	edge_right			),
+	.edge_down				(	edge_down			),
+	.edge_right				(	edge_right			)
 	
-	.o_hs					(					),    
-	.o_vs					(					),    
-	.o_de					(					)
+);
+
+Char_Division Char_Division_m0
+( 
+	.rst_n					(	rst_n				),   
+	.clk					(	video_clk			),
+
+	.i_x					(	GB_x				),        // video position X
+	.i_y					(	GB_y				),         // video position y
+
+	.edge_left				(	edge_left			),
+	.edge_up				(	edge_up				),
+	.edge_down				(	edge_down			),
+	.edge_right				(	edge_right			),
+
+	.char_up_position		(	char_up_position	),
+	.char_down_position		(	char_down_position	),
+	
+	.row_scanf_line1		(	row_scanf_line1		),
+	.row_scanf_line2		(	row_scanf_line2		),
+	
+	.Partition_line1		(	Partition_line1		),
+	.Partition_line2		(	Partition_line2		),
+	.Partition_line3		(	Partition_line3		),
+	.Partition_line4		(	Partition_line4		),
+	.Partition_line5		(	Partition_line5		),
+	.Partition_line6		(	Partition_line6		)
 
 );
 
+Digital_feature_scan Digital_feature_scan_m1
+(
+	.rst_n					(	rst_n				),   
+	.clk					(	video_clk			),
+	.i_hs					(	GB_hs				),    
+	.i_vs					(	GB_vs				),    
+	.i_de					(	GB_de				), 
+	
+	.char_up				(	char_up_position	),
+	.char_down				(	char_down_position	),	
+	.char_left				(	Partition_line1		),
+	.char_right				(	Partition_line2		),
+	
+	.i_x					(	GB_x				),			// video position X
+	.i_y					(	GB_y				),			// video position y	
 
+	.i_th					(	th_flag				),
 
-//Edge_Detect_cnt Edge_Detect_cnt_m0
+	.row_scanf_line1		(	row_scanf_line1		),
+	.row_scanf_line2		(	row_scanf_line2		),	
+	
+	.chepai_Digital			(	chepai_Digital_1	),
+	.feature_code			(	feature_code1		),
+	.char_middle			(	char1_middle		),
+	.intersection_code		(	intersection_code1	)
+
+);
+
+Digital_feature_scan Digital_feature_scan_m2
+(
+	.rst_n					(	rst_n				),   
+	.clk					(	video_clk			),
+	.i_hs					(	GB_hs				),    
+	.i_vs					(	GB_vs				),    
+	.i_de					(	GB_de				), 
+	
+	.char_up				(	char_up_position	),
+	.char_down				(	char_down_position	),	
+	.char_left				(	Partition_line2		),
+	.char_right				(	Partition_line3		),
+	
+	.i_x					(	GB_x				),			// video position X
+	.i_y					(	GB_y				),			// video position y	
+
+	.i_th					(	th_flag				),
+
+	.row_scanf_line1		(	row_scanf_line1		),
+	.row_scanf_line2		(	row_scanf_line2		),	
+	
+	.chepai_Digital			(	chepai_Digital_2	),
+	.feature_code			(	feature_code2		),
+	.char_middle			(	char2_middle		)
+
+);
+
+Digital_feature_scan Digital_feature_scan_m3
+(
+	.rst_n					(	rst_n				),   
+	.clk					(	video_clk			),
+	.i_hs					(	GB_hs				),    
+	.i_vs					(	GB_vs				),    
+	.i_de					(	GB_de				), 
+	
+	.char_up				(	char_up_position	),
+	.char_down				(	char_down_position	),	
+	.char_left				(	Partition_line3		),
+	.char_right				(	Partition_line4		),
+	
+	.i_x					(	GB_x				),			// video position X
+	.i_y					(	GB_y				),			// video position y	
+
+	.i_th					(	th_flag				),
+
+	.row_scanf_line1		(	row_scanf_line1		),
+	.row_scanf_line2		(	row_scanf_line2		),
+	
+	.chepai_Digital			(	chepai_Digital_3	),
+	.feature_code			(	feature_code3		),
+	.char_middle			(	char3_middle		)
+
+);
+
+Digital_feature_scan Digital_feature_scan_m4
+(
+	.rst_n					(	rst_n				),   
+	.clk					(	video_clk			),
+	.i_hs					(	GB_hs				),    
+	.i_vs					(	GB_vs				),    
+	.i_de					(	GB_de				), 
+	
+	.char_up				(	char_up_position	),
+	.char_down				(	char_down_position	),	
+	.char_left				(	Partition_line4		),
+	.char_right				(	Partition_line5		),
+	
+	.i_x					(	GB_x				),			// video position X
+	.i_y					(	GB_y				),			// video position y	
+
+	.i_th					(	th_flag				),
+
+	.row_scanf_line1		(	row_scanf_line1		),
+	.row_scanf_line2		(	row_scanf_line2		),
+	
+	.chepai_Digital			(	chepai_Digital_4	),
+	.feature_code			(	feature_code4		),
+	.char_middle			(	char4_middle		)
+
+);
+
+Digital_feature_scan5 Digital_feature_scan_m5
+(
+	.rst_n					(	rst_n				),   
+	.clk					(	video_clk			),
+	.i_hs					(	GB_hs				),    
+	.i_vs					(	GB_vs				),    
+	.i_de					(	GB_de				), 
+	
+	.char_up				(	char_up_position	),
+	.char_down				(	char_down_position	),	
+	.char_left				(	Partition_line5		),
+	.char_right				(	Partition_line6		),
+	
+	.i_x					(	GB_x				),			// video position X
+	.i_y					(	GB_y				),			// video position y	
+
+	.i_th					(	th_flag				),
+
+	.row_scanf_line1		(	row_scanf_line1		),
+	.row_scanf_line2		(	row_scanf_line2		),
+	
+	
+	.chepai_Digital			(	chepai_Digital_5	),
+	.feature_code			(	feature_code5		),
+	.char_middle			(	char5_middle		)
+
+);
+
+//Digital_intersection_Recognition Digital_intersection_Recognition_m0
 //(
-//	.clk					(	video_clk		),
-//	.rst_n					(	rst_n			),
+//	.rst_n					(	rst_n				),   
+//	.clk					(	video_clk			),
+//	.x						(	GB_x				),        // video position X
+//	.y						(	GB_y				),         // video position y
 //
-//	.i_hs					(	timing_hs		),    
-//	.i_vs					(	timing_vs		),    
-//	.i_de					(	timing_de		),     
-//	.i_data					(	timing_data		),
-//	.th_flag				(	th_flag			),
-//	.frame_cnt				(	frame_cnt		),
-//	.vs_fall				(	vs_fall			),
-//	.vs_rise				(	vs_rise			),
-//	.hs_fall				(	hs_fall			),
-//	.hs_rise				(	hs_rise			),
-//	.th_fall				(	th_fall			),
-//	.th_rise				(	th_rise			)
-//);
-
-
-//digital_recognition digital_recognition_m0
-//(
-//	.TFT_VCLK			(	video_clk		),
-//	.TFT_VS				(	timing_vs		),
-//	.rst_n				(	rst_n			),
-//	.th_flag			(	th_flag			),  	//threshold value
-//	.hcount				(	gen_x			),		//x_cnt
-//	.vcount				(	gen_y			),		//y_cnt
+//	.i_hs					(	GB_hs				),    
+//	.i_vs					(	GB_vs				),    
+//	.i_de					(	GB_de				),    
+//	.i_th					(	th_flag				),
 //	
-//	.th_flag_rise		(	th_rise			),
-//	.th_flag_fall		(	th_fall			), 
-//	.TFT_VS_rise		(	vs_rise			),
-//	.TFT_VS_fall		(	vs_fall			),
-//	.frame_cnt			(	frame_cnt		),
-//
-//	.h_2				(	h_2				),
-//	.v_5				(	v_5				),
-//	.v_3				(	v_3				),
+//	.char_up				(	char_up_position	),
+//	.char_down				(	char_down_position	),
+//	.char_left				(	Partition_line1		),
+//	.char_right				(	Partition_line2		),
 //	
-//	.send_str			(	send_str		),
-//	.reco_digital		(	reco_digital	)
+//	.row_scanf_line1		(	row_scanf_line1		),
+//	.row_scanf_line2		(	row_scanf_line2		)
+//		
 //);
 
 
@@ -383,8 +535,34 @@ Char_Pic_Disply Char_Pic_Disply_m0
 	
 	.edge_left			(	edge_left			),	
 	.edge_up			(	edge_up				),
-	.edge_dowm			(	edge_dowm			),
+	.edge_down			(	edge_down			),
 	.edge_right			(	edge_right			),
+	
+	.char_up_position		(	char_up_position	),
+	.char_down_position		(	char_down_position	),
+
+	.row_scanf_line1		(	row_scanf_line1		),
+	.row_scanf_line2		(	row_scanf_line2		),	
+	
+	.Partition_line1		(	Partition_line1		),
+	.Partition_line2		(	Partition_line2		),
+	.Partition_line3		(	Partition_line3		),
+	.Partition_line4		(	Partition_line4		),
+	.Partition_line5		(	Partition_line5		),
+	.Partition_line6		(	Partition_line6		),
+	
+	.char1_middle			(	char1_middle		),
+	.char2_middle			(	char2_middle		),
+	.char3_middle			(	char3_middle		),
+	.char4_middle			(	char4_middle		),
+	.char5_middle			(	char5_middle		),
+	
+	
+	.chepai_Digital_1		(	chepai_Digital_1	),			
+	.chepai_Digital_2		(	chepai_Digital_2	),
+	.chepai_Digital_3		(	chepai_Digital_3	),
+	.chepai_Digital_4		(	chepai_Digital_4	),
+	.chepai_Digital_5		(	chepai_Digital_5	),
 	
 	.o_hs				(	disp_hs				),    
 	.o_vs				(	disp_vs				), 
@@ -397,10 +575,19 @@ test_char_send test_char_send_m0
 (
 	.clk				(	clk					),
 	.rst_n				(	rst_n				),
-	.send_str			(	feature_code		),
+	.send_str			(	intersection_code1	),
 
 	
 	.RsTx				(	tx					)
+);
+
+led_shaning led_shaning_m0
+(
+	.clk				(	clk				),
+	.rst_n				(	rst_n			),
+
+	.led				(	led				)
+
 );
 
 //video frame data read-write control
@@ -473,4 +660,4 @@ sdram_core sdram_core_m0
 	.sdram_addr                 (sdram_addr               ),
 	.sdram_dq                   (sdram_dq                 )
 );
-endmodule
+endmodule 

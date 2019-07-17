@@ -21,7 +21,7 @@ module  RGB_Gary_Binary
 );
 reg		[30:0]				time_cnt;
 reg		[1:0]				frame_count;
-reg		[7:0]				threshold	=	40;
+reg		[7:0]				threshold	=	60;
 reg		[23:0]				image_data;
 reg 	[23:0]				vout_data;
 wire	[16:0]				Gary_data;
@@ -76,9 +76,8 @@ end
 
 always@(*)
 begin
-	if( (frame_count==2) && (x_cnt <= 30 || x_cnt >= 450 || y_cnt	<= 50 || y_cnt >= 220 ) )
-		vout_data	=	24'haaaaaa;
-		
+	if( (frame_count==2) && (x_cnt <= 30 || x_cnt >= 450 || y_cnt	<= 30 || y_cnt >= 240 ) )
+		vout_data	=	24'haaaaaa;		
 	else
 		vout_data	=	image_data;
 end

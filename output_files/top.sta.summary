@@ -3,55 +3,55 @@ Timing Analyzer Summary
 ------------------------------------------------------------
 
 Type  : Slow 1200mV 85C Model Setup 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 3.475
+Slack : 2.050
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Setup 'cmos_pclk'
-Slack : 7.295
+Slack : 6.584
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Setup 'clk'
-Slack : 10.365
+Slack : 10.040
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Setup 'video_pll_m0|altpll_component|auto_generated|pll1|clk[0]'
-Slack : 96.515
-TNS   : 0.000
-
-Type  : Slow 1200mV 85C Model Hold 'cmos_pclk'
-Slack : 0.421
-TNS   : 0.000
-
-Type  : Slow 1200mV 85C Model Hold 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 0.435
+Slack : 87.810
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Hold 'video_pll_m0|altpll_component|auto_generated|pll1|clk[0]'
 Slack : 0.436
 TNS   : 0.000
 
+Type  : Slow 1200mV 85C Model Hold 'cmos_pclk'
+Slack : 0.443
+TNS   : 0.000
+
 Type  : Slow 1200mV 85C Model Hold 'clk'
+Slack : 0.445
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Hold 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[1]'
 Slack : 0.454
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Recovery 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 6.748
+Slack : 5.704
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Removal 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 1.118
+Slack : 1.582
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Minimum Pulse Width 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 4.622
+Slack : 4.616
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Minimum Pulse Width 'cmos_pclk'
-Slack : 5.530
+Slack : 5.531
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Minimum Pulse Width 'clk'
-Slack : 9.575
+Slack : 9.577
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Minimum Pulse Width 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[0]'
@@ -59,34 +59,26 @@ Slack : 20.333
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Minimum Pulse Width 'video_pll_m0|altpll_component|auto_generated|pll1|clk[0]'
-Slack : 55.171
+Slack : 55.173
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Setup 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 3.841
+Slack : 2.558
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Setup 'cmos_pclk'
-Slack : 7.537
+Slack : 6.835
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Setup 'clk'
-Slack : 10.785
+Slack : 10.593
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Setup 'video_pll_m0|altpll_component|auto_generated|pll1|clk[0]'
-Slack : 97.578
-TNS   : 0.000
-
-Type  : Slow 1200mV 0C Model Hold 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 0.384
+Slack : 88.914
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Hold 'video_pll_m0|altpll_component|auto_generated|pll1|clk[0]'
-Slack : 0.384
-TNS   : 0.000
-
-Type  : Slow 1200mV 0C Model Hold 'cmos_pclk'
 Slack : 0.386
 TNS   : 0.000
 
@@ -94,24 +86,32 @@ Type  : Slow 1200mV 0C Model Hold 'clk'
 Slack : 0.402
 TNS   : 0.000
 
+Type  : Slow 1200mV 0C Model Hold 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 0.402
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Hold 'cmos_pclk'
+Slack : 0.403
+TNS   : 0.000
+
 Type  : Slow 1200mV 0C Model Recovery 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 6.944
+Slack : 5.952
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Removal 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 1.015
+Slack : 1.401
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Minimum Pulse Width 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 4.601
+Slack : 4.600
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Minimum Pulse Width 'cmos_pclk'
-Slack : 5.536
+Slack : 5.534
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Minimum Pulse Width 'clk'
-Slack : 9.579
+Slack : 9.583
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Minimum Pulse Width 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[0]'
@@ -119,27 +119,31 @@ Slack : 20.298
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Minimum Pulse Width 'video_pll_m0|altpll_component|auto_generated|pll1|clk[0]'
-Slack : 55.156
+Slack : 55.162
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Setup 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 7.050
+Slack : 6.609
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Setup 'cmos_pclk'
-Slack : 9.913
+Slack : 9.581
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Setup 'clk'
-Slack : 15.728
+Slack : 15.666
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Setup 'video_pll_m0|altpll_component|auto_generated|pll1|clk[0]'
-Slack : 104.629
+Slack : 100.742
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Hold 'cmos_pclk'
-Slack : 0.147
+Slack : 0.152
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Hold 'clk'
+Slack : 0.158
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Hold 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[1]'
@@ -150,16 +154,12 @@ Type  : Fast 1200mV 0C Model Hold 'video_pll_m0|altpll_component|auto_generated|
 Slack : 0.179
 TNS   : 0.000
 
-Type  : Fast 1200mV 0C Model Hold 'clk'
-Slack : 0.186
-TNS   : 0.000
-
 Type  : Fast 1200mV 0C Model Recovery 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 8.488
+Slack : 7.990
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Removal 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 0.492
+Slack : 0.689
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Minimum Pulse Width 'sys_pll_m0|altpll_component|auto_generated|pll1|clk[1]'
@@ -179,7 +179,7 @@ Slack : 20.591
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Minimum Pulse Width 'video_pll_m0|altpll_component|auto_generated|pll1|clk[0]'
-Slack : 55.291
+Slack : 55.287
 TNS   : 0.000
 
 ------------------------------------------------------------

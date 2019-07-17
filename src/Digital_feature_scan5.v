@@ -1,4 +1,4 @@
-module Digital_feature_scan
+module Digital_feature_scan5
 (
 	input                   rst_n,   
 	input                   clk,
@@ -57,14 +57,14 @@ reg		intersection_M1_reg,intersection_M2_reg;
 reg		intersection_R1_reg,intersection_R2_reg;
 
 
-wire	intersection_L1_en	=	((y_cnt == row_scanf_line1)&&( x_cnt>= char_left )&&( x_cnt<= char_left+18)	);
-wire	intersection_L2_en	=	((y_cnt == row_scanf_line2)&&( x_cnt>= char_left )&&( x_cnt<= char_left+18)	);
+wire	intersection_L1_en	=	((y_cnt == row_scanf_line1)&&( x_cnt>= char_left )&&( x_cnt<= char_left+15)	);
+wire	intersection_L2_en	=	((y_cnt == row_scanf_line2)&&( x_cnt>= char_left )&&( x_cnt<= char_left+15)	);
 
 wire	intersection_M1_en	=	((x_cnt == char_middle)&&( y_cnt>= char_up )&&( y_cnt<= row_scanf_line1)	);
 wire	intersection_M2_en	=	((x_cnt == char_middle)&&( y_cnt>= row_scanf_line2 )&&( y_cnt<= char_down)	);
 
-wire	intersection_R1_en	=	((y_cnt == row_scanf_line1)&&( x_cnt>= char_left+2*18 )&&( x_cnt<= char_right)	);
-wire	intersection_R2_en	=	((y_cnt == row_scanf_line2)&&( x_cnt>= char_left+2*18 )&&( x_cnt<= char_right)	);
+wire	intersection_R1_en	=	((y_cnt == row_scanf_line1)&&( x_cnt>= char_left+2*15 )&&( x_cnt<= char_right)	);
+wire	intersection_R2_en	=	((y_cnt == row_scanf_line2)&&( x_cnt>= char_left+2*15 )&&( x_cnt<= char_right)	);
 
 
 always@(posedge clk,negedge rst_n)
@@ -102,15 +102,15 @@ begin
 end
 
 
-assign	feature_code[0]	=	(	feature11_count	>=	60	)	?	1'b1	:	1'b0	;
-assign	feature_code[1]	=	(	feature12_count	>=	60	)	?	1'b1	:	1'b0	;
-assign	feature_code[2]	=	(	feature13_count	>=	60	)	?	1'b1	:	1'b0	;
-assign	feature_code[3]	=	(	feature21_count	>=	60	)	?	1'b1	:	1'b0	;
-assign	feature_code[4]	=	(	feature22_count	>=	60	)	?	1'b1	:	1'b0	;
-assign	feature_code[5]	=	(	feature23_count	>=	60	)	?	1'b1	:	1'b0	;
-assign	feature_code[6]	=	(	feature31_count	>=	60	)	?	1'b1	:	1'b0	;
-assign	feature_code[7]	=	(	feature32_count	>=	60	)	?	1'b1	:	1'b0	;
-assign	feature_code[8]	=	(	feature33_count	>=	60	)	?	1'b1	:	1'b0	;
+assign	feature_code[0]	=	(	feature11_count	>=	50	)	?	1'b1	:	1'b0	;
+assign	feature_code[1]	=	(	feature12_count	>=	50	)	?	1'b1	:	1'b0	;
+assign	feature_code[2]	=	(	feature13_count	>=	50	)	?	1'b1	:	1'b0	;
+assign	feature_code[3]	=	(	feature21_count	>=	50	)	?	1'b1	:	1'b0	;
+assign	feature_code[4]	=	(	feature22_count	>=	50	)	?	1'b1	:	1'b0	;
+assign	feature_code[5]	=	(	feature23_count	>=	50	)	?	1'b1	:	1'b0	;
+assign	feature_code[6]	=	(	feature31_count	>=	50	)	?	1'b1	:	1'b0	;
+assign	feature_code[7]	=	(	feature32_count	>=	50	)	?	1'b1	:	1'b0	;
+assign	feature_code[8]	=	(	feature33_count	>=	50	)	?	1'b1	:	1'b0	;
 
 wire	[11:0]	char_width	=	char_right	-	char_left	;
 wire	[11:0]	char_height	=	char_down	-	char_up		;
@@ -127,42 +127,42 @@ wire	[4:0]	feature_sum	=	feature_code[0]	+	feature_code[1]	+	feature_code[2]	+
 wire	vaule_output	=	(	x_cnt	==	450	&&	y_cnt	==	250	);
 
 
-wire	featuer_region11	=	(	(	( x_cnt >= char_left )	&&	( x_cnt <= char_left+18	)	)
+wire	featuer_region11	=	(	(	( x_cnt >= char_left )	&&	( x_cnt <= char_left+15	)	)
 								&&	(	( y_cnt >= char_up )	&&	( y_cnt <= char_up+25 	)	)	
 							);
 
 
-wire	featuer_region12	=	(	(	( x_cnt >= char_left+18 )	&&	( x_cnt <= char_left+18*2	)	)
+wire	featuer_region12	=	(	(	( x_cnt >= char_left+15 )	&&	( x_cnt <= char_left+15*2	)	)
 								&&	(	( y_cnt >= char_up )	&&	( y_cnt <= char_up+25 	)	)	
 							);							
 	
-wire	featuer_region13	=	(	(	( x_cnt >= char_left+18*2 )	&&	( x_cnt <= char_right	)	)
+wire	featuer_region13	=	(	(	( x_cnt >= char_left+15*2 )	&&	( x_cnt <= char_right	)	)
 								&&	(	( y_cnt >= char_up )	&&	( y_cnt <= char_up+25 	)	)	
 							);	
 							
-wire	featuer_region21	=	(	(	( x_cnt >= char_left )	&&	( x_cnt <= char_left+18	)	)
+wire	featuer_region21	=	(	(	( x_cnt >= char_left )	&&	( x_cnt <= char_left+15	)	)
 								&&	(	( y_cnt >= char_up+25 )	&&	( y_cnt <= char_up+25*2 	)	)	
 							);
 		
-wire	featuer_region22	=	(	(	( x_cnt >= char_left+18 )	&&	( x_cnt <= char_left+18*2	)	)
+wire	featuer_region22	=	(	(	( x_cnt >= char_left+15 )	&&	( x_cnt <= char_left+15*2	)	)
 								&&	(	( y_cnt >= char_up+25 )	&&	( y_cnt <= char_up+25*2  	)	)	
 							);
 	
-wire	featuer_region23	=	(	(	( x_cnt >= char_left +18*2)	&&	( x_cnt <= char_right	)	)
+wire	featuer_region23	=	(	(	( x_cnt >= char_left +15*2)	&&	( x_cnt <= char_right	)	)
 								&&	(	( y_cnt >= char_up+25 )	&&	( y_cnt <= char_up+25*2  	)	)	
 							);
 							
-wire	featuer_region31	=	(	(	( x_cnt >= char_left )	&&	( x_cnt <= char_left+18	)	)
+wire	featuer_region31	=	(	(	( x_cnt >= char_left )	&&	( x_cnt <= char_left+15	)	)
 								&&	(	( y_cnt >= char_up+25*2 )	&&	( y_cnt <= char_down 	)	)	
 							);
 
 
-wire	featuer_region32	=	(	(	( x_cnt >= char_left+18 )	&&	( x_cnt <= char_left+18*2	)	)
+wire	featuer_region32	=	(	(	( x_cnt >= char_left+15 )	&&	( x_cnt <= char_left+15*2	)	)
 								&&	(	( y_cnt >= char_up+25*2 )	&&	( y_cnt <= char_down 	)	)	
 							);
 
 
-wire	featuer_region33	=	(	(	( x_cnt >= char_left+18*2 )	&&	( x_cnt <= char_right	)	)
+wire	featuer_region33	=	(	(	( x_cnt >= char_left+15*2 )	&&	( x_cnt <= char_right	)	)
 								&&	(	( y_cnt >= char_up+25*2 )	&&	( y_cnt <= char_down 	)	)	
 							);	
 	
@@ -322,6 +322,7 @@ begin
 			intersection_R2	<=	intersection_R2_reg;
 		end
 end
+
 
 always@(posedge clk,negedge rst_n)
 begin
