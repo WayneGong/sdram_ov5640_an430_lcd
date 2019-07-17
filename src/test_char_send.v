@@ -21,8 +21,8 @@ begin
 		time_cnt	<=	time_cnt	+	1'b1;
 end
 
-wire	[7:0]	char2	=	send_str[23:16];		//15-8
-wire	[7:0]	char1	=	send_str[15:8];		//15-8
+//wire	[7:0]	char2	=	send_str[23:16];		//15-8
+//wire	[7:0]	char1	=	send_str[15:8];		//15-8
 wire	[7:0]	char0	=	send_str[7:0];		//7-0
 
 //	send_str	=	{x1_l,x1_r,x2_l,x2_r,y,x1,x2};
@@ -41,11 +41,9 @@ begin
 	if( time_cnt <=	10)
 		begin case( time_cnt )
 			0		:	tx_data_in	=	8'h22	;
-			1		:	tx_data_in	=	char2	;	
-			2		:	tx_data_in	=	char1	;
-			3		:	tx_data_in	=	char0	;
-			4		:	tx_data_in	=	8'h55	;
-
+			1		:	tx_data_in	=	char0	;	
+			2		:	tx_data_in	=	8'h22	;
+			3		:	tx_data_in	=	8'h55	;
 			default	:	tx_data_in	=	8'h55	;
 		endcase end
 	else 
@@ -54,7 +52,7 @@ end
 
 always@(*)
 begin
-	if( time_cnt <=	4 )
+	if( time_cnt <=	3 )
 		tx_en	=	1'b1;
 	else
 		tx_en	=	1'b0;

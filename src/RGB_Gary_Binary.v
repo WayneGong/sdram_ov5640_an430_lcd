@@ -21,7 +21,7 @@ module  RGB_Gary_Binary
 );
 reg		[30:0]				time_cnt;
 reg		[1:0]				frame_count;
-reg		[7:0]				threshold	=	40;
+reg		[7:0]				threshold	=	60;
 reg		[23:0]				image_data;
 reg 	[23:0]				vout_data;
 wire	[16:0]				Gary_data;

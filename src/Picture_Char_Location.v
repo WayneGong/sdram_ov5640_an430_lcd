@@ -19,7 +19,7 @@ module Picture_Char_Location
 	output	reg	[11:0]		edge_left,	
 	output	reg	[11:0]		edge_right,
 	output	reg	[11:0]		edge_up,
-	output	reg	[11:0]		edge_dowm,
+	output	reg	[11:0]		edge_down,
 	
 	output                  o_hs,    
 	output                  o_vs,    
@@ -48,7 +48,7 @@ reg		[post_dowm-post_up-1:0]		x_scanf_code,x_scanf_code_reg,x_scanf_code_temp,x_
 reg		[11:0]	edge_left_reg;
 reg		[11:0]	edge_right_reg;
 reg		[11:0]	edge_up_reg;
-reg		[11:0]	edge_dowm_reg;
+reg		[11:0]	edge_down_reg;
 
 
 always@(posedge clk or negedge rst_n)
@@ -116,20 +116,20 @@ end
 always@(posedge clk,negedge rst_n)
 begin
 	if(!rst_n)
-		edge_dowm_reg	<=	post_dowm;
+		edge_down_reg	<=	post_dowm;
 	else if( i_vs == 0 )
 		begin
-			edge_dowm_reg			<=	post_dowm;
+			edge_down_reg			<=	post_dowm;
 			x_scanf_code_temp2		<=	x_scanf_code;
 		end
 		
 	else if(x_scanf_code_temp2[post_dowm-post_up-1] == 1 )
 		begin
-			edge_dowm_reg		<=	edge_dowm_reg	-	1'b1;
+			edge_down_reg		<=	edge_down_reg	-	1'b1;
 			x_scanf_code_temp2	<=	{x_scanf_code_temp2[post_dowm-post_up-2:0],1'b0};
 		end
 	else
-		edge_dowm_reg	<=	edge_dowm_reg;	
+		edge_down_reg	<=	edge_down_reg;	
 end
 
 
@@ -160,7 +160,7 @@ begin
 			x_scanf_code	<=	'b0	;
 			edge_left		<=	'b0	;
 			edge_up			<=	'b0	;	
-			edge_dowm		<=	'b0	;
+			edge_down		<=	'b0	;
 			edge_right		<=	'b0	;
 		end
 	else if(vaule_output)
@@ -169,7 +169,7 @@ begin
 			x_scanf_code	<=	x_scanf_code_reg;
 			edge_left		<=	edge_left_reg;
 			edge_up			<=	edge_up_reg;
-			edge_dowm		<=	edge_dowm_reg;
+			edge_down		<=	edge_down_reg;
 			edge_right		<=	edge_right_reg;
 		end
 end

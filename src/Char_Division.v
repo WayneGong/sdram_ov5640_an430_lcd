@@ -8,7 +8,7 @@ module Char_Division
 	
 	input		[11:0]		edge_left,
 	input		[11:0]		edge_up,
-	input		[11:0]		edge_dowm	,
+	input		[11:0]		edge_down	,
 	input		[11:0]		edge_right	,
 	
 	output	reg	[11:0]		char_up_position,	
@@ -27,7 +27,7 @@ module Char_Division
 );
 
 wire	[11:0]	image_width		=	edge_right	-	edge_left;
-wire	[11:0]	image_height	=	edge_dowm	-	edge_up;
+wire	[11:0]	image_height	=	edge_down	-	edge_up;
 wire	[11:0]	char_height	=	char_down_position	-	char_up_position	;
 
 wire	[11:0] 	x_cnt	=	i_x;
@@ -45,6 +45,8 @@ reg	[11:0]		char_up_position_reg;
 reg	[11:0]		char_down_position_reg;
 reg	[11:0]		row_scanf_line1_reg;
 reg	[11:0]		row_scanf_line2_reg;
+
+
 
 
 always@(posedge clk,negedge rst_n)
@@ -65,17 +67,17 @@ begin
 		end
 	else 
 		begin
-			Partition_line1_reg		<=	edge_left	+	23*image_width[11:6]	+	0*10*image_width[11:6]	;
-			Partition_line2_reg		<=	edge_left	+	23*image_width[11:6]	+	1*10*image_width[11:6]	;
-			Partition_line3_reg		<=	edge_left	+	23*image_width[11:6]	+	2*10*image_width[11:6]	;
-			Partition_line4_reg		<=	edge_left	+	23*image_width[11:6]	+	3*10*image_width[11:6]	;
-			Partition_line5_reg		<=	edge_left	+	23*image_width[11:6]	+	4*10*image_width[11:6]	;
-		    Partition_line6_reg		<=	edge_left	+	23*image_width[11:6]	+	5*10*image_width[11:6]	-5	;
+			Partition_line1_reg		<=	edge_left	+	21*image_width/64	+	0*9*image_width/64	;
+			Partition_line2_reg		<=	edge_left	+	21*image_width/64	+	1*9*image_width/64	;
+			Partition_line3_reg		<=	edge_left	+	21*image_width/64	+	2*9*image_width/64	-0;
+			Partition_line4_reg		<=	edge_left	+	21*image_width/64	+	3*9*image_width/64	-2;
+			Partition_line5_reg		<=	edge_left	+	21*image_width/64	+	4*9*image_width/64	-4;
+		    Partition_line6_reg		<=	edge_left	+	21*image_width/64	+	5*9*image_width/64	-11;
 			
-			char_up_position_reg	<=	edge_up		+	3*image_height[11:5];
-			char_down_position_reg	<=	edge_dowm	-	3*image_height[11:5];
-			row_scanf_line1_reg		<=	char_up_position	+	6*char_height[11:4]	;
-            row_scanf_line2_reg		<=	char_up_position	+	12*char_height[11:4]	;
+			char_up_position_reg	<=	edge_up		+	3*image_height/32;
+			char_down_position_reg	<=	edge_down	-	3*image_height/32;
+			row_scanf_line1_reg		<=	char_up_position	+	5*char_height/16	;
+            row_scanf_line2_reg		<=	char_up_position	+	12*char_height/16	;
 			
 			
 		end
@@ -108,8 +110,7 @@ begin
 			char_up_position	<=	char_up_position_reg;
 			char_down_position	<=	char_down_position_reg;
 			row_scanf_line1		<=	row_scanf_line1_reg;
-			row_scanf_line2		<=	row_scanf_line2_reg;
-			
+			row_scanf_line2		<=	row_scanf_line2_reg;			
 			
 		end
 end

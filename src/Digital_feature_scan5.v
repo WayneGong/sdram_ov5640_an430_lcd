@@ -16,9 +16,12 @@ module Digital_feature_scan5
 	input		[11:0]		char_left,
 	input		[11:0]		char_right,
 	
+	input		[11:0]		row_scanf_line1,
+	input		[11:0]		row_scanf_line2,
 	
 	output		[8:0]		feature_code,
 	output	reg	[3:0]		chepai_Digital,
+	output		[11:0]		char_middle,
 	
 	output		[23:0]		o_data,
 	output		[11:0]		o_x,        // video position X
@@ -26,7 +29,8 @@ module Digital_feature_scan5
 	
 	output                  o_hs,    
 	output                  o_vs,    
-	output                  o_de
+	output                  o_de,
+	output		[7:0]		intersection_code
 
 );
 
@@ -43,6 +47,61 @@ reg	[11:0]	feature31_count_reg	,	feature31_count;
 reg	[11:0]	feature32_count_reg	,	feature32_count;
 reg	[11:0]	feature33_count_reg	,	feature33_count;
 
+assign	intersection_code={2'b0,intersection_L1,intersection_L2,intersection_M1,intersection_M2,intersection_R1,intersection_R2};
+reg		intersection_L1,intersection_L2;
+reg		intersection_M1,intersection_M2;
+reg		intersection_R1,intersection_R2;
+
+reg		intersection_L1_reg,intersection_L2_reg;
+reg		intersection_M1_reg,intersection_M2_reg;
+reg		intersection_R1_reg,intersection_R2_reg;
+
+
+wire	intersection_L1_en	=	((y_cnt == row_scanf_line1)&&( x_cnt>= char_left )&&( x_cnt<= char_left+15)	);
+wire	intersection_L2_en	=	((y_cnt == row_scanf_line2)&&( x_cnt>= char_left )&&( x_cnt<= char_left+15)	);
+
+wire	intersection_M1_en	=	((x_cnt == char_middle)&&( y_cnt>= char_up )&&( y_cnt<= row_scanf_line1)	);
+wire	intersection_M2_en	=	((x_cnt == char_middle)&&( y_cnt>= row_scanf_line2 )&&( y_cnt<= char_down)	);
+
+wire	intersection_R1_en	=	((y_cnt == row_scanf_line1)&&( x_cnt>= char_left+2*15 )&&( x_cnt<= char_right)	);
+wire	intersection_R2_en	=	((y_cnt == row_scanf_line2)&&( x_cnt>= char_left+2*15 )&&( x_cnt<= char_right)	);
+
+
+always@(posedge clk,negedge rst_n)
+begin
+	if( !rst_n )
+		begin
+			intersection_L1_reg	<=	'b0;
+			intersection_L2_reg	<=	'b0;
+			intersection_M1_reg	<=	'b0;
+			intersection_M2_reg	<=	'b0;
+			intersection_R1_reg	<=	'b0;
+			intersection_R2_reg	<=	'b0;
+		end
+	else if( i_vs == 0 )
+		begin
+			intersection_L1_reg	<=	'b0;
+			intersection_L2_reg	<=	'b0;
+			intersection_M1_reg	<=	'b0;
+			intersection_M2_reg	<=	'b0;
+			intersection_R1_reg	<=	'b0;
+			intersection_R2_reg	<=	'b0;
+		end
+	else if(intersection_L1_en && i_th)
+		intersection_L1_reg	<=	1'b1;
+	else if(intersection_L2_en && i_th)
+		intersection_L2_reg	<=	1'b1;
+	else if(intersection_R1_en && i_th)
+		intersection_R1_reg	<=	1'b1;
+	else if(intersection_R2_en && i_th)
+		intersection_R2_reg	<=	1'b1;
+	else if(intersection_M1_en && i_th)
+		intersection_M1_reg	<=	1'b1;
+	else if(intersection_M2_en && i_th)
+		intersection_M2_reg	<=	1'b1;
+end
+
+
 assign	feature_code[0]	=	(	feature11_count	>=	50	)	?	1'b1	:	1'b0	;
 assign	feature_code[1]	=	(	feature12_count	>=	50	)	?	1'b1	:	1'b0	;
 assign	feature_code[2]	=	(	feature13_count	>=	50	)	?	1'b1	:	1'b0	;
@@ -52,6 +111,14 @@ assign	feature_code[5]	=	(	feature23_count	>=	50	)	?	1'b1	:	1'b0	;
 assign	feature_code[6]	=	(	feature31_count	>=	50	)	?	1'b1	:	1'b0	;
 assign	feature_code[7]	=	(	feature32_count	>=	50	)	?	1'b1	:	1'b0	;
 assign	feature_code[8]	=	(	feature33_count	>=	50	)	?	1'b1	:	1'b0	;
+
+wire	[11:0]	char_width	=	char_right	-	char_left	;
+wire	[11:0]	char_height	=	char_down	-	char_up		;
+assign	char_middle	=	char_left	+	char_width[11:1];
+wire	col_scanf_en	=	( ( x_cnt== char_middle	    ) && ( y_cnt > char_up   ) && ( y_cnt <= char_down  ) );
+
+wire	row1_scanf_en	=	( ( y_cnt== row_scanf_line1 ) && ( x_cnt > char_left ) && ( x_cnt <= char_right ) );
+wire	row2_scanf_en	=	( ( y_cnt== row_scanf_line2 ) && ( x_cnt > char_left ) && ( x_cnt <= char_right ) );
 
 wire	[4:0]	feature_sum	=	feature_code[0]	+	feature_code[1]	+	feature_code[2]	+
                                 feature_code[3]	+	feature_code[4]	+	feature_code[5]	+
@@ -228,6 +295,12 @@ begin
 		    feature31_count	<=	'b0;
 		    feature32_count	<=	'b0;
 	        feature33_count	<=	'b0;
+			intersection_L1	<=	'b0;
+			intersection_L2	<=	'b0;
+			intersection_M1	<=	'b0;
+			intersection_M2	<=	'b0;
+			intersection_R1	<=	'b0;
+			intersection_R2	<=	'b0;
 		end
 	else if(vaule_output)
 		begin
@@ -240,25 +313,47 @@ begin
 		    feature31_count	<=	feature31_count_reg	;
 		    feature32_count	<=	feature32_count_reg	;
 	        feature33_count	<=	feature33_count_reg	;
+
+			intersection_L1	<=	intersection_L1_reg;
+			intersection_L2	<=	intersection_L2_reg;
+			intersection_M1	<=	intersection_M1_reg;
+			intersection_M2	<=	intersection_M2_reg;
+			intersection_R1	<=	intersection_R1_reg;
+			intersection_R2	<=	intersection_R2_reg;
 		end
 end
+
 
 always@(posedge clk,negedge rst_n)
 begin
 	if(!rst_n)
 		chepai_Digital	<=	'b0;
+	
+	else if( feature_sum >= 8 && intersection_L1==1 && intersection_R1==1 && feature_code[4]==1)
+		chepai_Digital	<=	4'h8;
+	else if( feature_sum >= 8 && intersection_L1==1 && intersection_R1==0 && feature_code[4]==1)
+		chepai_Digital	<=	4'h5;	
+	else if( feature_sum >=7 && intersection_L1==0&& intersection_L2==1 && intersection_R1==1 && intersection_R2==0&& feature_code[4]==1)
+		chepai_Digital	<=	4'h2;
+
+	else if( feature_sum >= 8 && feature_code[0]==0 && intersection_L1==0  && intersection_L2==1 && intersection_R1==1 && intersection_R2==1)
+		chepai_Digital	<=	4'h4;	
+	
+	else if( feature_sum >=7 && intersection_L1==0 && intersection_L2==1 && intersection_R1==1 && intersection_R2==1&& feature_code[4]==1)
+		chepai_Digital	<=	4'h3;
+		
 	else if( feature_sum == 8 && feature_code[4]==0 )
 		chepai_Digital	<=	4'h0;
-	else if( feature_sum == 8 && feature_code[0]==0 )
-		chepai_Digital	<=	4'h4;
-	else if( feature_sum == 7 && ( feature_code[8]==0 || feature_code[6]==0))
+
+	else if( feature_sum >= 7 && ( feature_code[8]==0 || feature_code[6]==0))
 		chepai_Digital	<=	4'h9;
 	else if( feature_sum == 7 && ( feature_code[0]==0 ||feature_code[2]==0   ) )
 		chepai_Digital	<=	4'h6;
+	else if( feature_sum <= 3 && ( (feature_code[0]==0 && feature_code[2]==0 && feature_code[3]==0) ||( feature_code[5]==0 ||feature_code[6]==0 ||feature_code[8]==0  ) ) )
+		chepai_Digital	<=	4'h1;
 	else if( feature_sum >= 5 && ( feature_code[3]==0 ||feature_code[6]==0 ||feature_code[8]==0  ) )
 		chepai_Digital	<=	4'h7;
-	else if( feature_sum <= 4 && ( feature_code[0]==0 ||feature_code[2]==0 ||feature_code[3]==0 ||feature_code[5]==0 ||feature_code[6]==0 ||feature_code[8]==0  ) )
-		chepai_Digital	<=	4'h1;
+
 //**************************************		
 	else
 		chepai_Digital	<=	4'h8;

@@ -14,7 +14,7 @@ module Char_Pic_Disply
 	
 	input		[11:0]		edge_left,
 	input		[11:0]		edge_up,
-	input		[11:0]		edge_dowm	,
+	input		[11:0]		edge_down	,
 	input		[11:0]		edge_right	,
 	
 	input		[11:0]		Partition_line1,
@@ -30,6 +30,12 @@ module Char_Pic_Disply
 	input		[11:0]		row_scanf_line1,
 	input		[11:0]		row_scanf_line2,
 
+	input		[11:0]		char1_middle,
+	input		[11:0]		char2_middle,
+	input		[11:0]		char3_middle,
+	input		[11:0]		char4_middle,
+	input		[11:0]		char5_middle,	
+	
 	input		[3:0]		chepai_Digital_1,
 	input		[3:0]		chepai_Digital_2,
 	input		[3:0]		chepai_Digital_3,
@@ -89,8 +95,14 @@ wire	[3:0]	char5	=	chepai_Digital_5	;
 
 
 wire	edge_line		=	( ( x_cnt	==	1  ) || ( x_cnt	==	480 ) || ( y_cnt == 0  ) || ( y_cnt == 271 ) );
-wire	char_region		=	( ( x_cnt	==	edge_left ) || ( x_cnt	==	edge_right ) || ( y_cnt == edge_up ) || ( y_cnt == edge_dowm ) );
-
+wire	char_region		=	( ( x_cnt	==	edge_left ) || ( x_cnt	==	edge_right ) || ( y_cnt == edge_up ) || ( y_cnt == edge_down ) );
+wire	char_middle_en	=	( ( x_cnt	==	char1_middle)
+							||( x_cnt	==	char2_middle )
+							||( x_cnt	==	char3_middle )
+							||( x_cnt	==	char4_middle )
+							||( x_cnt	==	char5_middle )
+							
+							);
 
 //列特征线								
 wire	column_feature	=	( 		( x_cnt	==	Partition_line1 + 18 )	
@@ -200,12 +212,15 @@ begin
 	else if(  y_scanf_en || x_scanf_en )		//车牌定位扫描线
 		vout_data	<=	24'hff00ff;			//紫色
 	
-	else if(char_Division )		//字符分割线
+	else if(char_Division )				//字符分割线
 		vout_data	<=	24'h00FF00;			//绿色
 
-	else if( char5_mark )
-		vout_data	<=	24'h0000ff;			//蓝色
-		
+//	else if( char5_mark )
+//		vout_data	<=	24'h0000ff;			//蓝色
+	
+	else if(feature_scanf_en || char_middle_en)				//特征扫描线,行和列
+		vout_data	<=	24'h0000ff;			//蓝色	
+	
 //		
 //	else if( column_feature || row_feature )	//列,列特征线				
 //		vout_data	<=	24'hffff00;			//黄色	
@@ -213,8 +228,7 @@ begin
 ////	else if( edge_line )		//显示屏边框线
 ////		vout_data	<=	24'hff0000;			//红色
 //	
-////	else if(feature_scanf_en )		//特征扫描线
-////		vout_data	<=	24'h0000ff;			//绿色				
+			
 //	
 ////	else if( char_region )		//字符区域
 ////		vout_data	<=	24'hff0000;			//蓝色
@@ -223,7 +237,7 @@ begin
 ////	else if( 		( x_cnt	==	edge_left	)  	//车牌边框
 ////				|| 	( x_cnt	==	edge_right	)
 ////				||	( y_cnt	==	edge_up 	) 
-////				||	( y_cnt ==	edge_dowm	)  
+////				||	( y_cnt ==	edge_down	)  
 ////			) 	
 ////		vout_data	<=	24'hff0000;			//红色	
 ////	

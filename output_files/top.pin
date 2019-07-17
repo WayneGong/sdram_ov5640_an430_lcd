@@ -275,7 +275,7 @@ lcd_b[1]                     : N12       : output : 3.3-V LVTTL       :         
 VCCD_PLL4                    : N13       : power  :                   : 1.2V    :           :                
 lcd_g[6]                     : N14       : output : 3.3-V LVTTL       :         : 5         : Y              
 RESERVED_INPUT               : N15       :        :                   :         : 5         :                
-RESERVED_INPUT               : N16       :        :                   :         : 5         :                
+led                          : N16       : output : 3.3-V LVTTL       :         : 5         : Y              
 RESERVED_INPUT               : P1        :        :                   :         : 2         :                
 RESERVED_INPUT               : P2        :        :                   :         : 2         :                
 RESERVED_INPUT               : P3        :        :                   :         : 3         :                

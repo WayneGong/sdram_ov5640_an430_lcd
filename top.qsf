@@ -115,16 +115,10 @@ set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Standard Edition"
 set_location_assignment PIN_E15 -to key[3]
 set_location_assignment PIN_E16 -to key[2]
 set_location_assignment PIN_M16 -to key[1]
-set_location_assignment PIN_N16 -to led[3]
-set_location_assignment PIN_N15 -to led[2]
-set_location_assignment PIN_P16 -to led[1]
-set_location_assignment PIN_R16 -to led[0]
 set_location_assignment PIN_R6 -to tx
+set_global_assignment -name PROJECT_IP_REGENERATION_POLICY ALWAYS_REGENERATE_IP
 set_global_assignment -name VERILOG_FILE src/Digital_feature_scan5.v
-set_global_assignment -name VERILOG_FILE src/Digital_feature_scan4.v
-set_global_assignment -name VERILOG_FILE src/Digital_feature_scan3.v
-set_global_assignment -name VERILOG_FILE src/Digital_feature_scan2.v
-set_global_assignment -name VERILOG_FILE src/Digital_feature_scan1.v
+set_global_assignment -name VERILOG_FILE src/Digital_feature_scan.v
 set_global_assignment -name VERILOG_FILE src/digital_recognition.v
 set_global_assignment -name VERILOG_FILE src/parameter_define.v
 set_global_assignment -name VERILOG_FILE src/UART_Module/uart_tx.v
@@ -161,10 +155,9 @@ set_global_assignment -name VERILOG_FILE src/Char_Pic_Disply.v
 set_global_assignment -name VERILOG_FILE src/RGB_Gary_Binary.v
 set_global_assignment -name QIP_FILE src/fifo_ip/fifo_y.qip
 set_global_assignment -name VERILOG_FILE src/test_char_send.v
-set_global_assignment -name VERILOG_FILE top.v
-set_global_assignment -name VERILOG_FILE src/Digital_feature_scan.v
 set_global_assignment -name VERILOG_FILE src/Picture_Char_Location.v
 set_global_assignment -name VERILOG_FILE src/Char_Division.v
 set_global_assignment -name VERILOG_FILE src/Digital_Recognition.v
-set_global_assignment -name PROJECT_IP_REGENERATION_POLICY ALWAYS_REGENERATE_IP
+set_global_assignment -name VERILOG_FILE src/led_shaning.v
+set_location_assignment PIN_N16 -to led
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
