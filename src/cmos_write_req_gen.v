@@ -55,12 +55,13 @@ always@(posedge pclk or posedge rst)
 begin
 	if(rst == 1'b1)
 		write_req <= 1'b0;
-	else if(cmos_vsync_d0 == 1'b1 && cmos_vsync_d1 == 1'b0)
-		write_req <= 1'b1;
-	else if(write_req_ack == 1'b1)
-		write_req <= 1'b0;
+	else if(cmos_vsync_d0 == 1'b1 && cmos_vsync_d1 == 1'b0)	//cmos_vsync下降沿，一帧图像开始标志
+		write_req <= 1'b1;				//一帧图像开始，发出有效的写请求
+	else if(write_req_ack == 1'b1)		
+		write_req <= 1'b0;				//等到写请求响应后，将写请求置为无效
 end
-always@(posedge pclk or posedge rst)
+
+always@(posedge pclk or posedge rst)		//乒乓操作，四帧图片按次序进行读写
 begin
 	if(rst == 1'b1)
 		write_addr_index <= 2'b0;
@@ -68,7 +69,7 @@ begin
 		write_addr_index <= write_addr_index + 2'd1;
 end
 
-always@(posedge pclk or posedge rst)
+always@(posedge pclk or posedge rst)		
 begin
 	if(rst == 1'b1)
 		read_addr_index <= 2'b0;

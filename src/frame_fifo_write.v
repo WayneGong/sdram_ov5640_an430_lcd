@@ -82,21 +82,21 @@ always@(posedge mem_clk or posedge rst)
 begin
 	if(rst == 1'b1)
 	begin
-		write_req_d0    <=  1'b0;
-		write_req_d1    <=  1'b0;
-		write_req_d2    <=  1'b0;
-		write_len_d0    <=  ZERO[ADDR_BITS - 1:0];              //equivalent to write_len_d0 <= 0;
-		write_len_d1    <=  ZERO[ADDR_BITS - 1:0];              //equivalent to write_len_d1 <= 0;
-		write_addr_index_d0    <=  2'b00;
-		write_addr_index_d1    <=  2'b00;
+		write_req_d0   	 	<=  1'b0;
+		write_req_d1    	<=  1'b0;
+		write_req_d2    	<=  1'b0;
+		write_len_d0    	<=  ZERO[ADDR_BITS - 1:0];              //equivalent to write_len_d0 <= 0;
+		write_len_d1		<=  ZERO[ADDR_BITS - 1:0];              //equivalent to write_len_d1 <= 0;
+		write_addr_index_d0	<=  2'b00;
+		write_addr_index_d1	<=  2'b00;
 	end
 	else
 	begin
-		write_req_d0    <=  write_req;
-		write_req_d1    <=  write_req_d0;
-		write_req_d2    <=  write_req_d1;
-		write_len_d0    <=  write_len;
-		write_len_d1    <=  write_len_d0;
+		write_req_d0   	 	<=  write_req;
+		write_req_d1    	<=  write_req_d0;
+		write_req_d2    	<=  write_req_d1;
+		write_len_d0    	<=  write_len;
+		write_len_d1    	<=  write_len_d0;
 		write_addr_index_d0 <= write_addr_index;
 		write_addr_index_d1 <= write_addr_index_d0;
 	end 
@@ -107,21 +107,21 @@ always@(posedge mem_clk or posedge rst)
 begin
 	if(rst == 1'b1)
 	begin
-		state <= S_IDLE;
-		write_len_latch <= ZERO[ADDR_BITS - 1:0];
-		wr_burst_addr <= ZERO[ADDR_BITS - 1:0];
-		wr_burst_req <= 1'b0;
-		write_cnt <= ZERO[ADDR_BITS - 1:0];
-		fifo_aclr <= 1'b0;
-		write_req_ack <= 1'b0;
-		wr_burst_len <= ZERO[BUSRT_BITS - 1:0];
+		state 				<= S_IDLE;
+		write_len_latch 	<= ZERO[ADDR_BITS - 1:0];
+		wr_burst_addr 		<= ZERO[ADDR_BITS - 1:0];
+		wr_burst_req 		<= 1'b0;
+		write_cnt 			<= ZERO[ADDR_BITS - 1:0];
+		fifo_aclr 			<= 1'b0;
+		write_req_ack 		<= 1'b0;
+		wr_burst_len 		<= ZERO[BUSRT_BITS - 1:0];
 	end
 	else
 		case(state)
 			//idle state,waiting for write write_req_d2 == '1' goto the 'S_ACK'
 			S_IDLE:
 			begin
-				if(write_req_d2 == 1'b1)
+				if(write_req_d2 == 1'b1)	//一帧图片开始时，写请求信号write_req置高，先进入写请求响应状态，然后开始传输数据
 				begin
 					state <= S_ACK;
 				end
@@ -132,17 +132,15 @@ begin
 			begin
 				//after write request revocation(write_req_d2 == '0'),goto 'S_CHECK_FIFO',write_req_ack goto '0'
 				if(write_req_d2 == 1'b0)
-				begin
-					state <= S_CHECK_FIFO;
-					fifo_aclr <= 1'b0;
-					write_req_ack <= 1'b0;
-				end
+					begin
+						state 			<= S_CHECK_FIFO;
+						fifo_aclr 		<= 1'b0;
+						write_req_ack 	<= 1'b0;
+					end
 				else
-				begin
-					//write request response
-					write_req_ack <= 1'b1;
-					//FIFO reset
-					fifo_aclr <= 1'b1;
+				begin					
+					write_req_ack 	<= 1'b1;		//write request response					
+					fifo_aclr 		<= 1'b1;		//FIFO reset
 					//select valid base address from write_addr_0 write_addr_1 write_addr_2 write_addr_3
 					if(write_addr_index_d1 == 2'd0)
 						wr_burst_addr <= write_addr_0;
@@ -159,32 +157,34 @@ begin
 				write_cnt <= ZERO[ADDR_BITS - 1:0];
 			end
 			S_CHECK_FIFO:
-			begin
-				//if there is a write request at this time, enter the 'S_ACK' state
-				if(write_req_d2 == 1'b1)
 				begin
-					state <= S_ACK;
+					//if there is a write request at this time, enter the 'S_ACK' state
+					if(write_req_d2 == 1'b1)
+						begin
+							state <= S_ACK;
+						end
+					//if the FIFO space is a burst write request, goto burst write state
+					//rdusedw：标志着fifo中还有储存着多少可读的数，当fifo中可读的数大于突发长度时，进行一次突发传输
+					//此时发出一个有效的写请求信号（wr_burst_req）
+					else if(rdusedw >= BURST_SIZE)
+						begin
+							state 			<= S_WRITE_BURST;
+							wr_burst_len 	<= BURST_SIZE[BUSRT_BITS - 1:0];
+							wr_burst_req 	<= 1'b1;
+						end
 				end
-				//if the FIFO space is a burst write request, goto burst write state
-				else if(rdusedw >= BURST_SIZE)
-				begin
-					state <= S_WRITE_BURST;
-					wr_burst_len <= BURST_SIZE[BUSRT_BITS - 1:0];
-					wr_burst_req <= 1'b1;
-				end
-			end
 			
 			S_WRITE_BURST:
 			begin
 				//burst finish
 				if(wr_burst_finish == 1'b1)
 				begin
-					wr_burst_req <= 1'b0;
-					state <= S_WRITE_BURST_END;
-					//write counter + burst length
-					write_cnt <= write_cnt + BURST_SIZE[ADDR_BITS - 1:0];
-					//the next burst write address is generated
-					wr_burst_addr <= wr_burst_addr + BURST_SIZE[ADDR_BITS - 1:0];
+					wr_burst_req 	<= 1'b0;
+					state 			<= S_WRITE_BURST_END;
+				//write counter + burst length
+					write_cnt 		<= write_cnt + BURST_SIZE[ADDR_BITS - 1:0];
+				//the next burst write address is generated
+					wr_burst_addr 	<= wr_burst_addr + BURST_SIZE[ADDR_BITS - 1:0];
 				end     
 			end
 			S_WRITE_BURST_END:
@@ -196,6 +196,9 @@ begin
 				end
 				//if the write counter value is less than the frame length, continue writing,
 				//otherwise the writing is complete
+				
+				//write_len_latch：一帧图片的字节长度，此处为480*272=130560，当写计数小于该值时，
+				//说明一帧图片还没有往内存中写完，继续跳转到fifo检查状态，等待下一次突发传输
 				else if(write_cnt < write_len_latch)
 				begin
 					state <= S_CHECK_FIFO;

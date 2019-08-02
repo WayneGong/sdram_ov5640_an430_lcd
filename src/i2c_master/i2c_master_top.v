@@ -42,6 +42,7 @@ module i2c_master_top
 	input  sda_pad_i,                           // SDA-line input
 	output sda_pad_o,                           // SDA-line output (always 1'b0)
 	output sda_padoen_o,                        // SDA-line output enable (active low)
+	
 	input i2c_addr_2byte,                       // Is the register address 16bit?
 	input i2c_read_req,                         // Read register request
 	output i2c_read_req_ack,                    // Read register request response
