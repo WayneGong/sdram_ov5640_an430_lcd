@@ -47,7 +47,6 @@ reg	[11:0]	feature31_count_reg	,	feature31_count;
 reg	[11:0]	feature32_count_reg	,	feature32_count;
 reg	[11:0]	feature33_count_reg	,	feature33_count;
 
-assign	intersection_code={2'b0,intersection_L1,intersection_L2,intersection_M1,intersection_M2,intersection_R1,intersection_R2};
 reg		intersection_L1,intersection_L2;
 reg		intersection_M1,intersection_M2;
 reg		intersection_R1,intersection_R2;
@@ -55,6 +54,8 @@ reg		intersection_R1,intersection_R2;
 reg		intersection_L1_reg,intersection_L2_reg;
 reg		intersection_M1_reg,intersection_M2_reg;
 reg		intersection_R1_reg,intersection_R2_reg;
+
+assign	intersection_code={2'b0,intersection_L1,intersection_L2,intersection_M1,intersection_M2,intersection_R1,intersection_R2};
 
 
 wire	intersection_L1_en	=	((y_cnt == row_scanf_line1)&&( x_cnt>= char_left )&&( x_cnt<= char_left+18)	);

@@ -96,7 +96,7 @@ begin
 		read_req <= 1'b0;
 	else if(video_vs_d0 & ~video_vs) //vertical synchronization edge (the rising or falling edges are OK)
 		read_req <= 1'b1;
-	else if(read_req_ack)
+	else if(read_req_ack)  
 		read_req <= 1'b0;
 end
 

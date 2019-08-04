@@ -83,23 +83,23 @@ always@(posedge mem_clk or posedge rst)
 begin
 	if(rst == 1'b1)
 	begin
-		read_req_d0    <=  1'b0;
-		read_req_d1    <=  1'b0;
-		read_req_d2    <=  1'b0;
-		read_len_d0    <=  ZERO[ADDR_BITS - 1:0];               //equivalent to read_len_d0 <= 0;
-		read_len_d1    <=  ZERO[ADDR_BITS - 1:0];               //equivalent to read_len_d1 <= 0;
-		read_addr_index_d0 <= 2'b00;
-		read_addr_index_d1 <= 2'b00;
+		read_req_d0    		<=  1'b0;
+		read_req_d1    		<=  1'b0;
+		read_req_d2    		<=  1'b0;
+		read_len_d0    		<=  ZERO[ADDR_BITS - 1:0];               //equivalent to read_len_d0 <= 0;
+		read_len_d1    		<=  ZERO[ADDR_BITS - 1:0];               //equivalent to read_len_d1 <= 0;
+		read_addr_index_d0 	<= 2'b00;
+		read_addr_index_d1 	<= 2'b00;
 	end
 	else
 	begin
-		read_req_d0    <=  read_req;
-		read_req_d1    <=  read_req_d0;
-		read_req_d2    <=  read_req_d1;     
-		read_len_d0    <=  read_len;
-		read_len_d1    <=  read_len_d0; 
-		read_addr_index_d0 <= read_addr_index;
-		read_addr_index_d1 <= read_addr_index_d0;
+		read_req_d0    		<=  read_req;
+		read_req_d1    		<=  read_req_d0;
+		read_req_d2    		<=  read_req_d1;     
+		read_len_d0    		<=  read_len;
+		read_len_d1    		<=  read_len_d0; 
+		read_addr_index_d0 	<= 	read_addr_index;
+		read_addr_index_d1 	<= 	read_addr_index_d0;
 	end 
 end
 
@@ -108,14 +108,14 @@ always@(posedge mem_clk or posedge rst)
 begin
 	if(rst == 1'b1)
 	begin
-		state <= S_IDLE;
-		read_len_latch <= ZERO[ADDR_BITS - 1:0];
-		rd_burst_addr <= ZERO[ADDR_BITS - 1:0];
-		rd_burst_req <= 1'b0;
-		read_cnt <= ZERO[ADDR_BITS - 1:0];
-		fifo_aclr <= 1'b0;
-		rd_burst_len <= ZERO[BUSRT_BITS - 1:0];
-		read_req_ack <= 1'b0;
+		state 			<= S_IDLE;
+		read_len_latch 	<= ZERO[ADDR_BITS - 1:0];
+		rd_burst_addr 	<= ZERO[ADDR_BITS - 1:0];
+		rd_burst_req 	<= 1'b0;
+		read_cnt 		<= ZERO[ADDR_BITS - 1:0];
+		fifo_aclr 		<= 1'b0;
+		rd_burst_len	<= ZERO[BUSRT_BITS - 1:0];
+		read_req_ack 	<= 1'b0;
 	end
 	else
 		case(state)
@@ -133,9 +133,9 @@ begin
 			begin
 				if(read_req_d2 == 1'b0)
 				begin
-					state <= S_CHECK_FIFO;
-					fifo_aclr <= 1'b0;
-					read_req_ack <= 1'b0;
+					state 			<= S_CHECK_FIFO;
+					fifo_aclr 		<= 1'b0;
+					read_req_ack 	<= 1'b0;
 				end
 				else
 				begin

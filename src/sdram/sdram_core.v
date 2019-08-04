@@ -152,7 +152,7 @@ always@(posedge clk or posedge rst)
 begin
 	if(rst == 1'b1)
 		cnt_15us <= 11'd0;
-	else if(cnt_15us < 11'd1499)
+	else if(cnt_15us < 11'd1499)		//100Mhz,10ns per clock，15us=15*10^3ns/10ns = 1500clocks
 		cnt_15us <= cnt_15us+1'b1;
 	else
 		cnt_15us <= 11'd0;
@@ -161,7 +161,7 @@ end
 always@(posedge clk or posedge rst)
 begin
 	if(rst == 1'b1)
-		sdram_ref_req <= 1'b0;
+		sdram_ref_req <= 1'b0;			//自刷新	请求信号		
 	else if(cnt_15us == 11'd1498)
 		sdram_ref_req <= 1'b1;   
 	else if(sdram_ref_ack)
@@ -217,7 +217,7 @@ begin
 						read_flag <= 1'b1;
 						end
 				//row active
-				S_ACTIVE:
+				S_ACTIVE:  
 					if(T_RCD == 0)
 						 if(read_flag) state <= S_READ;
 						 else state <= S_WRITE;
@@ -264,6 +264,7 @@ end
 assign sdram_ref_ack = (state == S_AR);// SDRAM self refresh response signal
 
 //1 clock to write ahead
+//
 assign wr_burst_data_req = ((state == S_TRCD) & ~read_flag) | (state == S_WRITE)|((state == S_WD) & (cnt_clk_r < wr_burst_len - 2'd2));
 //Read the SDRAM response signal
 assign rd_burst_data_valid = (state == S_RD) & (cnt_clk_r >= 9'd1) & (cnt_clk_r < rd_burst_len + 2'd1);
@@ -348,19 +349,19 @@ begin
 			end
 			S_INIT_PRE: 
 			begin
-				{ras_n_r,cas_n_r,we_n_r} <= 3'b010;
+				{ras_n_r,cas_n_r,we_n_r} <= 3'b010;		//预充电
 				sdram_ba_r <= {SDR_BA_WIDTH{1'b1}};
 				sdram_addr_r <= {SDR_ROW_WIDTH{1'b1}};
 			end
 			S_INIT_AR1,S_INIT_AR2: 
 			begin
-				{ras_n_r,cas_n_r,we_n_r} <= 3'b001;
+				{ras_n_r,cas_n_r,we_n_r} <= 3'b001;		//自刷新
 				sdram_ba_r <= {SDR_BA_WIDTH{1'b1}};
 				sdram_addr_r <= {SDR_ROW_WIDTH{1'b1}};
 			end
 			S_INIT_MRS:
 			begin   //Mode register setting, which can be set according to actual needs
-				{ras_n_r,cas_n_r,we_n_r} <= 3'b000;
+				{ras_n_r,cas_n_r,we_n_r} <= 3'b000;		//配置模式寄存器
 				sdram_ba_r <= {SDR_BA_WIDTH{1'b0}};  
 				sdram_addr_r <= {
 					3'b000,
@@ -373,17 +374,17 @@ begin
 			end
 			S_IDLE,S_TRCD,S_CL,S_TRFC,S_TDAL: 
 			begin
-				{ras_n_r,cas_n_r,we_n_r} <= 3'b111;
+				{ras_n_r,cas_n_r,we_n_r} <= 3'b111;		//空指令
 				sdram_ba_r <= {SDR_BA_WIDTH{1'b1}};
 				sdram_addr_r <= {SDR_ROW_WIDTH{1'b1}};
 			end
-			S_ACTIVE: 
+			S_ACTIVE: 									//行激活，块地址和行地址赋值
 			begin
 				{ras_n_r,cas_n_r,we_n_r} <= 3'b011;
 				sdram_ba_r <= sys_addr[APP_ADDR_WIDTH - 1:APP_ADDR_WIDTH - SDR_BA_WIDTH];  
 				sdram_addr_r <= sys_addr[SDR_COL_WIDTH + SDR_ROW_WIDTH - 1:SDR_COL_WIDTH]; 
 			end
-			S_READ: 
+			S_READ: 									//读操作时的列地址赋值
 			begin
 				{ras_n_r,cas_n_r,we_n_r} <= 3'b101;
 				sdram_ba_r <= sys_addr[APP_ADDR_WIDTH - 1:APP_ADDR_WIDTH - SDR_BA_WIDTH];  
@@ -399,13 +400,13 @@ begin
 					sdram_addr_r <= {SDR_ROW_WIDTH{1'b1}};
 				end
 			end
-			S_WRITE: 
+			S_WRITE: 					//写命令状态
 			begin
 				{ras_n_r,cas_n_r,we_n_r} <= 3'b100;
 				sdram_ba_r <= sys_addr[APP_ADDR_WIDTH - 1:APP_ADDR_WIDTH - SDR_BA_WIDTH];  
 				sdram_addr_r <= {4'b0010,sys_addr[8:0]};//Column address A10=1, set write enable, allow precharge
 			end
-			S_WD: 
+			S_WD: 						//写数据状态
 			begin
 				if(end_wrburst) {ras_n_r,cas_n_r,we_n_r} <= 3'b110;
 				else begin
@@ -414,7 +415,7 @@ begin
 					sdram_addr_r <= {SDR_ROW_WIDTH{1'b1}};
 				end
 			end
-			S_AR: 
+			S_AR: 						//自刷新			
 			begin
 				{ras_n_r,cas_n_r,we_n_r} <= 3'b001;
 				sdram_ba_r <= {SDR_BA_WIDTH{1'b1}};

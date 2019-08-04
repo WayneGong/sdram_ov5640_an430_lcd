@@ -638,15 +638,15 @@ frame_read_write frame_read_write_m0
 	.wr_burst_data              (wr_burst_data            ),
 	.wr_burst_finish            (wr_burst_finish          ),
 	.write_clk                  (cmos_pclk                ),
-	.write_req                  (write_req                ),
-	.write_req_ack              (write_req_ack            ),
-	.write_finish               (                         ),
-	.write_addr_0               (24'd0                    ),
-	.write_addr_1               (24'd2073600              ),
-	.write_addr_2               (24'd4147200              ),
-	.write_addr_3               (24'd6220800              ),
+	.write_req                  (write_req                ),	//sys_addr[23:0]
+	.write_req_ack              (write_req_ack            ),	//[23:22]	bank_addr
+	.write_finish               (                         ),	//[21:9]	row_addr
+	.write_addr_0               (24'd0                    ),	//[8:0]		col_addr
+	.write_addr_1               (24'd2073600              ),	//‭00_01111110100100_00000000‬
+	.write_addr_2               (24'd4147200              ),	//‭00_11111101001000_00000000‬
+	.write_addr_3               (24'd6220800              ),	//‭01_01111011101100_00000000‬
 	.write_addr_index           (write_addr_index         ),
-	.write_len                  (24'd130560               ), //frame size
+	.write_len                  (24'd130560               ), 	//frame size 480*272=130560	
 	.write_en                   (write_en                 ),
 	.write_data                 (write_data               )
 );
